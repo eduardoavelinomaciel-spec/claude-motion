@@ -111,3 +111,53 @@ Pacotes (título, descrição, miniatura) das 5 primeiras: `roteiros/pacotes-5-h
 
 **Métricas para acompanhar:** CTR (bom: 5–8%), retenção aos 30 s (bom: 70%), duração média (bom: 40–50% do vídeo) e, nos Shorts, "visualizaram" vs. "deslizaram" (bom: 70% ou mais).
 Se o CTR estiver baixo, troque título e miniatura. Se a queda for no início, refaça o gancho. Se a queda for no meio, encurte o trecho onde ela acontece.
+
+---
+
+## 8. Plano anti-risco (o que fazer para não dar errado)
+
+### Risco 1 · Produção lenta (1 cena por dia)
+- **Linguagem de "HQ animada" em ~60% dos planos:** quadros de HQ com movimento de câmera, paralaxe, luz, chuva e piscar de olhos, em vez de animar o corpo inteiro. O formato HQ permite isso e é bem mais rápido. A animação completa fica para os 3 ou 4 momentos-herói de cada história.
+- **Filmar para os pontos fortes:** closes, silhuetas com luz de contorno, mãos e objetos, sombras. Evite planos abertos de corpo inteiro, onde o código fica mais fraco.
+- **Semana de kit antes da História 2:** rigs reutilizáveis, 6 cenários base × 4 luzes, componentes de HQ por timeline e render 16:9 + 9:16 automático.
+- **Estoque antes de lançar:** só abrir o canal com 1 história longa + 21 Shorts prontos (3 semanas de folga).
+- **Produção em lote:** segunda roteiro e timeline, de terça a quinta animação, sexta som e miniaturas. O render roda à noite, em segundo plano.
+
+### Risco 2 · Vídeo longo de 8 min perdendo retenção
+- Começar com **3 a 5 min**: cada cena ganha um "orçamento" de 15 a 25 s e só o essencial fica.
+- Nos primeiros 10 s, o momento mais forte, sem nenhuma introdução.
+- Uma virada a cada 30 a 45 s; nenhum plano parado por mais de 4 s sem movimento.
+- Testar no Studio: se a retenção cair abaixo de 50% antes de 1 min, refazer a abertura.
+- A versão de 8 min fica para quando o canal já tiver público (e para a receita com anúncios no meio do vídeo).
+
+### Risco 3 · Investir meses sem saber se o estilo funciona
+- **Teste do estilo esta semana:** 3 Shorts com cenas prontas (Cenas 1, 2 e 3).
+- **Regras de decisão depois de 48 h de cada Short:**
+
+| Resultado | Ação |
+|---|---|
+| "Visualizaram" acima de 70% | Estilo validado: seguir |
+| Entre 55 e 70% | Trocar o gancho (primeiro 1 s) e republicar como Short novo |
+| Abaixo de 55% | Mudar o primeiro plano: close + movimento + texto curto |
+| Muitas repetições ou compartilhamentos | Transformar esse momento em miniatura e título do longo |
+
+- **Regra dos 30 Shorts:** só avaliar o canal depois de 30 Shorts. Antes disso, o algoritmo ainda está testando o público.
+
+### Risco 4 · Balões em português limitam o alcance global
+- **Ícone primeiro:** o máximo possível de emoção em ícones, onomatopeias e imagem. Meta: no máximo ~25 palavras por minuto de vídeo.
+- Textos dos balões num JSON por idioma. Quando um vídeo performar bem fora do Brasil, gerar a versão em inglês.
+- Título, descrição e capítulos traduzidos em todo vídeo, desde o primeiro.
+
+### Risco 5 · Concorrência com canais de IA e a política de "conteúdo inautêntico"
+- **Segundo pilar de conteúdo, o bastidor:** Shorts mostrando o processo ("animei esta chuva só com código", antes e depois da pixelização, o código virando cena). Isso prova autoria, diferencia o canal da IA e atrai um segundo público (criadores e programadores).
+- Cada história com paleta, cenário e ritmo próprios. Nada de reaproveitar a mesma cena de abertura.
+
+### Risco 6 · Ser classificado como "Feito para crianças"
+- Abrir o canal com histórias adultas (Cachorro, Avó, Menina, Faroleiro).
+- Títulos e miniaturas com temas de adulto (perda, memória, solidão), sem visual infantil.
+- Marcar com honestidade vídeo a vídeo; peixe e gato ficam para depois.
+
+### Risco 7 · Desistir cedo (o motivo número 1 de canais que não crescem)
+- Meta de processo, não de views: **90 Shorts e 6 histórias em 90 dias.**
+- Revisão semanal de 30 min com só 3 números: "visualizaram" nos Shorts, CTR e retenção aos 30 s.
+- Cada semana, mudar **uma** coisa com base nos números, nunca tudo de uma vez.
