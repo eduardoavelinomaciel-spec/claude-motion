@@ -32,7 +32,7 @@
 **Som:** sem voz. Uma trilha de chiptune suave misturada com piano. Cada balão tem um "blip" (fala, tom médio; ícone, tom agudo; pensamento, tom com eco). Ruídos de cena: chuva, motor, padaria. Na cena 8 a trilha passa para tensão; na 10, volta ao tom quente.
 
 **Personagens (modelo 3D low-poly, depois pixelado)**
-- **Otávio:** alto (cerca de 1,90 m), cabelo grisalho curto, casaco bege, mochila cinza, ombros curvados no início e eretos no final.
+- **Otávio:** cerca de 30 anos, alto e magro, cabelo escuro curto e bagunçado, olhar cansado, barba por fazer, casaco bege comprido, cachecol vermelho, mochila cinza. Ombros curvados no início e eretos no final.
 - **Caramelo:** vira-lata caramelo, uma orelha em pé e outra dobrada, focinho branco. Começa sujo; coleira vermelha com plaquinha a partir da cena 12.
 
 ---
