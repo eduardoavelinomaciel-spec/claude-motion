@@ -376,11 +376,11 @@ function street4(g, dy) {
   g.save(); g.translate(0, dy); g.fillStyle = '#3a1a30'; g.fillRect(0, 900, W, 400); g.fillStyle = 'rgba(255,170,120,0.6)'; g.fillRect(0, 898, W, 5); g.restore();
 }
 function shot4(t, lt) {
-  const up = ease(lt / 6), dy = up * 220, sc = 1 - up * 0.16;
+  const up = ease(lt / 6), dy = up * 220, sc = 1 - up * 0.3, cdy = up * 40;
   street4(ctx, dy);
-  rimSil(ctx, (m) => silhouettes(m, t, dy, sc), { col: '#ffcf8a', dx: 0, dy: -5, blur: 10, fill: '#1a0c18' });
+  rimSil(ctx, (m) => silhouettes(m, t, cdy, sc), { col: '#ffcf8a', dx: 0, dy: -5, blur: 10, fill: '#1a0c18' });
   // scarf, the one colour in the silhouette
-  ctx.save(); ctx.translate(880, 900 + dy); ctx.scale(sc, sc); ctx.translate(-880, -900); ctx.fillStyle = '#6a1820'; ctx.beginPath(); ctx.roundRect(704, 604, 116, 30, 14); ctx.fill(); ctx.beginPath(); ctx.moveTo(790, 620); ctx.quadraticCurveTo(800 + Math.sin(t * 2) * 6, 700, 786, 760); ctx.lineTo(812, 760); ctx.quadraticCurveTo(820, 690, 818, 620); ctx.closePath(); ctx.fill(); ctx.restore();
+  ctx.save(); ctx.translate(880, 900 + cdy); ctx.scale(sc, sc); ctx.translate(-880, -900); ctx.fillStyle = "#6a1820"; ctx.beginPath(); ctx.roundRect(704, 604, 116, 30, 14); ctx.fill(); ctx.beginPath(); ctx.moveTo(790, 620); ctx.quadraticCurveTo(800 + Math.sin(t * 2) * 6, 700, 786, 760); ctx.lineTo(812, 760); ctx.quadraticCurveTo(820, 690, 818, 620); ctx.closePath(); ctx.fill(); ctx.restore();
   bloom(ctx, 0.35, 30); grade(ctx, { vig: 0.55, seed: 64 });
 }
 
