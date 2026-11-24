@@ -1,0 +1,20 @@
+{
+  "fps": 24,
+  "duration": 34,
+  "shots": [
+    { "id": 1, "start": 0.0, "end": 6.0, "name": "rua acorda, porta da padaria sobe" },
+    { "id": 2, "start": 6.0, "end": 10.0, "name": "focinho farejando" },
+    { "id": 3, "start": 10.0, "end": 16.0, "name": "fio de cheiro ate a padaria" },
+    { "id": 4, "start": 16.0, "end": 22.0, "name": "criancas: BOM DIA, CARAMELO!" },
+    { "id": 5, "start": 22.0, "end": 28.0, "name": "olha para os dois lados" },
+    { "id": 6, "start": 28.0, "end": 34.0, "name": "cartao de fato: faro" }
+  ],
+  "beats": {
+    "lights": 1.2, "shutter": 2.4,
+    "sniff1": 6.8, "sniff2": 8.2,
+    "bread": 13.4,
+    "kidsIn": 16.3, "bomdia": 17.2, "huh": 19.6,
+    "look1": 22.8, "look2": 24.4, "think": 25.6,
+    "card": 28.6
+  }
+}
