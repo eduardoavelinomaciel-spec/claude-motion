@@ -15,7 +15,7 @@ html, body { margin: 0; background: #fff; overflow: hidden; }
 </script>
 </head>
 <body>
-<div id="stage"><canvas id="gl"></canvas><canvas id="ov" width="1920" height="1080"></canvas></div>
+<div id="stage"><canvas id="gl" style="visibility:hidden"></canvas><canvas id="px" width="480" height="270" style="position:absolute;left:0;top:0;width:1920px;height:1080px;image-rendering:pixelated"></canvas><canvas id="ov" width="1920" height="1080"></canvas></div>
 <script type="module" src="main.js"></script>
 </body>
 </html>

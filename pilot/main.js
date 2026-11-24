@@ -1,10 +1,11 @@
 import * as THREE from 'three';
+import * as SP from './sprites.js';
 
 await document.fonts.load('60px PS2P'); await document.fonts.load('40px Bangers');
 // ---------- setup ----------
 const W = 480, H = 270, S = 4; // render res, upscale
 const MODE = new URLSearchParams(location.search).get('f') || 'A';
-const NIGHT = MODE !== 'B' && MODE !== 'D';
+const NIGHT = !['B', 'D', 'S'].includes(MODE);
 
 let seed = 7;
 const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
@@ -322,69 +323,118 @@ addLights();
 const cam = (fov, pos, look) => { const c = new THREE.PerspectiveCamera(fov, 1, 0.1, 120); c.position.copy(pos); c.lookAt(look); return c; };
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 
-const key = (c, i, x, y, z) => { if (!NIGHT) return; const l = new THREE.PointLight(c, i, 8, 1.4); l.position.set(x, y, z); scene.add(l); };
+// ---------- sprite layout (2D pixel sprites over the 3D city) ----------
+const items = []; // {spr, at:[x,y] RT px (anchor), flip, z}
+const extras = []; // fn(pctx) drawn after sprites
+const projRT = (v, p) => { p.cam.aspect = p.rect[2] / p.rect[3]; p.cam.updateProjectionMatrix(); p.cam.updateMatrixWorld(); const n = v.clone().project(p.cam); const [x, y, w, h] = p.rect.map((q) => q / S); return [Math.round(x + (n.x + 1) / 2 * w), Math.round(y + (1 - n.y) / 2 * h)]; };
+const NFX = (rimColor, dx) => (NIGHT ? { tint: [0.82, 0.76, 0.98], rim: { color: rimColor, dx, dy: 0, k: 0.55 } } : undefined);
+const portraitIn = (spr, p, flip = false) => { const [x, y, w, h] = p.rect.map((q) => q / S); items.push({ spr, at: [Math.round(x + w / 2 + (flip ? -1 : 1) * (spr.anchor[0] - spr.width / 2)), Math.round(y + h - 2)], flip, z: -1, clip: [x, y, w, h] }); };
+
 if (MODE === 'A') {
-  const o = otavio({ headDown: 0.6, armR: -0.95, armL: 0.05 }); o.position.set(0, 0, -0.3); o.rotation.y = -0.25; scene.add(o);
-  const d = dog({ pose: 'leap' }); d.position.set(0.98, -0.22, -0.3); d.rotation.y = -Math.PI / 2; scene.add(d);
-  const c = car(0xd8343c); c.position.set(-4.6, 0, -1.6); c.rotation.y = Math.PI / 2 + 0.22; scene.add(c);
   scene.add(rain(V(0, 0, 2)));
-  key(0xffb070, 6, 1.5, 2.6, 1.2); key(0xff4fc0, 4, -1.5, 1.8, 0.5);
-  scene.updateMatrixWorld(true);
-  const hd = d.userData.head.getWorldPosition(V()), ph = o.userData.phone.getWorldPosition(V());
-  const main = cam(44, V(0.7, 0.85, 5.4), V(-0.6, 1.0, -0.5));
-  const eye = cam(30, hd.clone().add(V(-0.45, 0.06, 0.5)), hd);
-  const hand = cam(34, ph.clone().add(V(0.18, 0.42, 0.5)), ph);
-  panels.push({ rect: [0, 0, 1240, 1080], cam: main }, { rect: [1256, 0, 664, 532], cam: eye }, { rect: [1256, 548, 664, 532], cam: hand });
-  ov.dogHead = () => d.userData.head.getWorldPosition(V());
-  ov.car = () => c.localToWorld(V(0, 0.7, 2.1));
+  const main = cam(42, V(0.4, 1.0, 7.0), V(-0.5, 1.15, -0.3));
+  const bg1 = cam(30, V(1.5, 1.3, 3), V(-3.5, 2.6, -7.5));
+  const bg2 = cam(30, V(0.5, 1.0, 3), V(4, 1.0, -7.5));
+  panels.push({ rect: [0, 0, 1240, 1080], cam: main }, { rect: [1256, 0, 664, 532], cam: bg1 }, { rect: [1256, 548, 664, 532], cam: bg2 });
+  const pm = panels[0];
+  const ot = projRT(V(0, 0, -0.3), pm);
+  const cr = projRT(V(-3.4, 0, -1.4), pm);
+  items.push({ spr: SP.car({ lit: true, fx: NFX('#ff3cac', -1) }), at: cr, flip: true, z: 9 });
+  items.push({ spr: SP.otavioSide({ head: 0.35, arm: -0.7, farArm: 0.15, stride: 0.22, fx: NFX('#ffb070', -1) }), at: ot, flip: true, z: 7 });
+  items.push({ spr: SP.dogSide({ pose: 'leap', fx: NFX('#ffb070', -1) }), at: [ot[0] + 34, ot[1] - 22], flip: true, z: 6 });
+  portraitIn(SP.dogPortrait({ fx: NFX('#ff3cac', -1) }), panels[1], true);
+  portraitIn(SP.handPhone({ fx: NFX('#3cf2ff', 1) }), panels[2], true);
+  extras.push((g) => headBeams(g, cr, true));
+  ov.dogHead = () => [(ot[0] + 34 - 22) * S, (ot[1] - 22 - 34) * S];
+  ov.car = () => [(cr[0] + 50) * S, (cr[1] - 40) * S];
+  ov.eye = () => [1560, 180];
 }
 if (MODE === 'B') {
-  const d = dog({ pose: 'splash', muddy: true }); d.position.set(-1.0, 0, 1.2); d.rotation.y = 0.55; scene.add(d);
-  const pud = new THREE.Mesh(new THREE.CircleGeometry(1.4, 12), new THREE.MeshLambertMaterial({ color: 0x7a5a3c })); pud.rotation.x = -Math.PI / 2; pud.scale.set(1.3, 0.8, 1); pud.position.set(-1.0, 0.02, 1.2); scene.add(pud);
-  for (const [px, pz, s] of [[3, -2.5, 1], [-6, -1, 1.4], [5, 2.4, 0.9], [-3.5, -3, 0.8]]) {
+  const pud = new THREE.Mesh(new THREE.CircleGeometry(1.4, 12), new THREE.MeshLambertMaterial({ color: 0x7a5a3c })); pud.rotation.x = -Math.PI / 2; pud.scale.set(1.3, 0.8, 1); pud.position.set(-1.7, 0.02, -1.4); scene.add(pud);
+  for (const [px, pz, s] of [[2.6, -2.5, 1], [-5, -1, 1.4], [3.5, 0.4, 0.9]]) {
     const p = new THREE.Mesh(new THREE.CircleGeometry(1, 10), new THREE.MeshBasicMaterial({ color: 0xa9dcff })); p.rotation.x = -Math.PI / 2; p.scale.set(1.6 * s, s, 1); p.position.set(px, 0.025, pz); scene.add(p);
   }
-  scene.add(particles(46, V(-1.0, 0.3, 1.2), 1.5, P.mud, [0.04, 0.11], 1.2));
-  scene.add(particles(18, V(-1.0, 0.4, 1.2), 1.2, 0xbfe4ff, [0.03, 0.07], 1.4));
-  for (let k = 0; k < 8; k++) scene.add(pigeon(R(-6, -2.2), R(2.6, 4.8), R(-3.2, -1.2), R(-0.9, 0.9)));
-  const can = new THREE.Group(); can.position.set(2.4, 0.33, 0.2); can.rotation.set(0.2, 0.5, Math.PI / 2);
-  can.add(new THREE.Mesh(new THREE.CylinderGeometry(0.33, 0.28, 0.85, 10), lam(0xf07a1e)));
-  can.add(at(new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 0.06, 10), lam(0x2b8a3a)), 0, 0.45, 0));
-  scene.add(can);
-  const lid = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 0.05, 10), lam(0x2b8a3a)); lid.position.set(1.05, 1.65, 1.6); lid.rotation.set(1.1, 0, 0.6); scene.add(lid);
-  for (let k = 0; k < 8; k++) { const t = box(R(0.1, 0.2), 0.02, R(0.1, 0.2), lam([0xffffff, 0xe7d38a, 0xd8343c][k % 3])); t.position.set(R(1.4, 3.6), 0.05 + (k % 3) * 0.25, R(-0.4, 1.0)); t.rotation.set(R(0, 3), R(0, 3), 0); scene.add(t); }
-  scene.add(at(box(3.4, 1.1, 0.4, lam(0xe9e1c9)), 4.6, 0.73, -4.6));
-  const ct = cat(); ct.position.set(4.2, 1.28, -4.6); ct.rotation.y = -0.9; ct.scale.setScalar(1.3); scene.add(ct);
-  const o = otavio({ phone: false, armR: 0.25, armL: -0.15, smile: true }); o.position.set(-3.6, 0.18, -5.2); o.rotation.y = 0.45; scene.add(o);
-  const main = cam(46, V(0.9, 1.25, 4.6), V(0.2, 1.35, -2.2));
+  scene.add(at(box(3.4, 1.1, 0.4, lam(0xe9e1c9)), 4.0, 0.73, -4.6));
+  const main = cam(42, V(0.3, 1.25, 2.6), V(0.1, 1.45, -5));
   panels.push({ rect: [0, 0, 1920, 1080], cam: main });
-  ov.dogHead = () => d.userData.head.getWorldPosition(V());
-  ov.cat = () => ct.localToWorld(V(0, 0.45, 0.2));
-  ov.can = () => can.getWorldPosition(V());
-  ov.pigeons = () => V(-4.2, 4.6, -2.2);
-  ov.otavio = () => o.userData.head.getWorldPosition(V());
+  const pm = panels[0];
+  const ot = projRT(V(-3.2, 0.18, -5.3), pm), dg = [150, 232], tc = projRT(V(1.9, 0, -1.2), pm), ct = projRT(V(3.5, 1.28, -4.6), pm), ld = projRT(V(1.1, 1.3, -1.0), pm);
+  items.push({ spr: SP.otavioFront({ smile: true }), at: ot, z: 8 });
+  items.push({ spr: SP.cat(), at: ct, flip: true, z: 8 });
+  items.push({ spr: SP.trashCan(), at: tc, z: 5 });
+  items.push({ spr: SP.lid(), at: ld, z: 4 });
+  items.push({ spr: SP.dogSide({ pose: 'splash', muddy: true }), at: dg, z: 3 });
+  for (let k = 0; k < 7; k++) items.push({ spr: SP.pigeon(k % 2 === 0), at: [Math.round(R(20, 150)), Math.round(R(25, 95))], flip: k % 3 === 0, z: 9 });
+  extras.unshift((g) => { g.fillStyle = SP.OUT; g.beginPath(); g.ellipse(dg[0], dg[1] + 2, 44, 9, 0, 0, 7); g.fill(); g.fillStyle = '#7a5a3c'; g.beginPath(); g.ellipse(dg[0], dg[1] + 2, 43, 8, 0, 0, 7); g.fill(); g.fillStyle = '#9a7a58'; g.fillRect(dg[0] - 20, dg[1], 14, 1); });
+  extras.push((g) => blobs(g, dg[0], dg[1] - 6, 40, 26, ['#6b4a2b', '#8a6a48'], 0.9));
+  extras.push((g) => blobs(g, dg[0], dg[1] - 8, 30, 14, ['#bfe4ff', '#ffffff'], 0.7));
+  extras.push((g) => blobs(g, tc[0] + 8, tc[1] - 4, 18, 8, ['#ffffff', '#e7d38a', '#d8343c'], 0.4));
+  ov.dogHead = () => [(dg[0] + 8) * S, (dg[1] - 50) * S];
+  ov.cat = () => [(ct[0] - 6) * S, (ct[1] - 30) * S];
+  ov.can = () => [tc[0] * S, tc[1] * S];
+  ov.pigeons = () => [60 * S, 40 * S];
+  ov.otavio = () => [ot[0] * S, (ot[1] - 90) * S];
 }
 if (MODE === 'C') {
-  const o = otavio({ lean: -0.27, armR: -2.6, armL: -0.5, headDown: -0.35, phoneFly: V(0.1, 2.35, -1.2), smile: false }); o.position.set(0, 0, -0.5); o.rotation.y = Math.PI; scene.add(o);
-  const d = dog({ pose: 'pull' }); d.position.set(0, 0, 0.42); d.rotation.y = Math.PI; scene.add(d);
-  const c = car(0xd8343c); c.position.set(-3.3, 0, -2.1); c.rotation.y = Math.PI / 2 + 0.35; scene.add(c);
   scene.add(rain(V(0, 0, 0), 2600, [12, 9, 10]));
-  scene.add(particles(70, V(-1.6, 0.25, -2.4), 1.5, 0xcfe0ff, [0.03, 0.08], 1.4));
-  key(0xffb070, 7, 2.5, 2.4, 1.0); key(0x6fb0ff, 4, 1.5, 2.5, -1.5);
-  scene.updateMatrixWorld(true);
-  const hd = d.userData.head.getWorldPosition(V());
-  const main = cam(42, V(5.4, 0.85, 0.7), V(-0.6, 1.0, -0.7));
-  const close = cam(30, hd.clone().add(V(1.25, 0.15, 0.15)), hd.clone().add(V(0, 0.05, -0.2)));
-  panels.push({ rect: [0, 0, 1920, 1080], cam: main }, { rect: [1330, 600, 540, 420], cam: close });
-  ov.car = () => c.localToWorld(V(0, 1.0, 2.0));
-  ov.dogHead = () => d.userData.head.getWorldPosition(V());
+  const main = cam(42, V(7.2, 1.05, 0.2), V(-0.5, 1.15, -0.5));
+  const bg = cam(30, V(2, 1.2, 1), V(-6, 2.2, 4));
+  panels.push({ rect: [0, 0, 1920, 1080], cam: main }, { rect: [1330, 600, 540, 420], cam: bg });
+  const pm = panels[0];
+  const ot = projRT(V(0, 0, -0.5), pm), cr = projRT(V(-2.2, 0, -2.3), pm);
+  items.push({ spr: SP.car({ lit: true, fx: NFX('#3cf2ff', 1) }), at: cr, z: 9 });
+  items.push({ spr: SP.otavioSide({ lean: -0.38, arm: -2.5, farArm: -1.6, head: -0.3, stride: 0.35, phone: false, shock: true, fx: NFX('#ffb070', 1) }), at: ot, z: 6 });
+  items.push({ spr: SP.dogSide({ pose: 'pull', fx: NFX('#ff3cac', -1) }), at: [ot[0] - 46, ot[1] + 2], z: 5 });
+  portraitIn(SP.dogPortrait({ bite: true, fx: NFX('#ff3cac', -1) }), panels[1]);
+  extras.push((g) => headBeams(g, cr, false));
+  extras.push((g) => blobs(g, cr[0] + 30, cr[1] - 6, 60, 50, ['#cfe0ff', '#ffffff', '#8fb0ff'], 0.8));
+  extras.push((g) => { const x = ot[0] - 2, y = ot[1] - 118; g.fillStyle = SP.OUT; g.fillRect(x - 1, y - 1, 6, 10); g.fillStyle = '#15161c'; g.fillRect(x, y, 4, 8); g.fillStyle = '#8fe0ff'; g.fillRect(x + 1, y + 1, 2, 6); });
+  ov.car = () => [(cr[0] - 20) * S, (cr[1] - 70) * S];
+  ov.dogHead = () => [(ot[0] - 20) * S, (ot[1] - 40) * S];
 }
-if (MODE === 'D') {
-  const poses = ['stand', 'leap', 'pull', 'splash'];
-  poses.forEach((p, i) => { const d = dog({ pose: p }); d.position.set(-3 + i * 2, 0, 2); d.rotation.y = -Math.PI / 2; scene.add(d); });
-  const o = otavio({}); o.position.set(5, 0, 2); scene.add(o);
-  panels.push({ rect: [0, 0, 1920, 1080], cam: cam(30, V(0.8, 1.2, 9.5), V(0.8, 0.8, 2)) });
+
+if (MODE === 'S') {
+  scene.background = new THREE.Color(0x3b5c96); scene.remove(city);
+  panels.push({ rect: [0, 0, 1920, 1080], cam: cam(30, V(0, 30, 60), V(0, 30, 0)) });
+  const row = [[SP.otavioFront({}), 30, 118], [SP.otavioFront({ smile: true }), 80, 118], [SP.otavioSide({ head: 0.35, arm: -0.7, stride: 0.22 }), 140, 118], [SP.otavioSide({ lean: -0.38, arm: -2.5, farArm: -1.6, head: -0.3, stride: 0.35, phone: false, shock: true }), 215, 118],
+    [SP.dogSide({}), 290, 118], [SP.dogSide({ pose: 'leap' }), 360, 118], [SP.dogPortrait({}), 435, 118],
+    [SP.dogSide({ pose: 'pull' }), 40, 250], [SP.dogSide({ pose: 'splash', muddy: true }), 105, 250], [SP.car({}), 215, 250], [SP.cat(), 330, 250], [SP.trashCan(), 380, 250], [SP.pigeon(true), 420, 230], [SP.pigeon(false), 450, 245]];
+  row.forEach(([spr, x, y]) => items.push({ spr, at: [x, y], z: 0 }));
 }
+function headBeams(g, cr, flip) {
+  if (!NIGHT) return;
+  g.save(); g.globalCompositeOperation = 'lighter';
+  const fx = flip ? cr[0] + 58 : cr[0] - 58, fy = cr[1] - 14, dir = flip ? 1 : -1;
+  const gr = g.createLinearGradient(fx, fy, fx + dir * 180, fy);
+  gr.addColorStop(0, 'rgba(255,246,200,0.55)'); gr.addColorStop(1, 'rgba(255,246,200,0)');
+  g.fillStyle = gr; g.beginPath(); g.moveTo(fx, fy - 4); g.lineTo(fx + dir * 190, fy - 40); g.lineTo(fx + dir * 190, fy + 40); g.closePath(); g.fill();
+  g.restore();
+}
+function blobs(g, cx, cy, spread, n, cols, up) {
+  for (let k = 0; k < n; k++) {
+    const a = R(Math.PI * 1.05, Math.PI * 1.95), r = R(4, spread);
+    const x = Math.round(cx + Math.cos(a) * r * 1.3), y = Math.round(cy + Math.sin(a) * r * up), s = Math.round(R(1, 3.5));
+    g.fillStyle = SP.OUT; g.fillRect(x - 1, y - 1, s + 2, s + 2); g.fillStyle = cols[k % cols.length]; g.fillRect(x, y, s, s);
+  }
+}
+function drawSprites(g) {
+  if (MODE === 'B') extras.shift()(g);
+  items.sort((a, b) => b.z - a.z);
+  for (const it of items) {
+    g.save();
+    if (it.clip) { g.beginPath(); g.rect(...it.clip); g.clip(); }
+    const [ax, ay] = it.spr.anchor;
+    if (it.flip) { g.translate(it.at[0], 0); g.scale(-1, 1); g.drawImage(it.spr, -ax, it.at[1] - ay); }
+    else g.drawImage(it.spr, it.at[0] - ax, it.at[1] - ay);
+    g.restore();
+  }
+  extras.forEach((f) => f(g));
+  if (NIGHT) { // foreground rain over sprites
+    g.fillStyle = 'rgba(170,200,255,0.55)';
+    for (let k = 0; k < 260; k++) { const x = Math.round(R(0, W)), y = Math.round(R(0, H)); g.fillRect(x, y, 1, 5); }
+  }
+}
+
 // ---------- post (pixel shader: dither + quantize + depth outline) ----------
 const post = new THREE.ShaderMaterial({
   uniforms: { tC: { value: rt.texture }, tD: { value: rt.depthTexture }, px: { value: new THREE.Vector2(1 / W, 1 / H) }, L: { value: 7.0 } },
@@ -509,46 +559,50 @@ function sfx(text, x, y, size, rot, fill = ['#fff35a', '#ff8a1e'], shadow = '#d8
 }
 
 function overlay() {
-  if (MODE === 'D') return;
+  if (MODE === 'D' || MODE === 'S') return;
   if (MODE === 'A') {
-    const [mx, my] = toScreen(ov.dogHead(), panels[0]);
+    const [mx, my] = ov.dogHead();
     speedLines(mx, my, panels[0].rect, 80, 230, 'rgba(255,255,255,0.35)');
     halftone(1256, 0, 664, 532, 'rgba(255,60,172,0.45)', 16, 'br');
     halftone(1256, 548, 664, 532, 'rgba(60,240,255,0.35)', 16, 'tl');
     panelFrames();
-    const [cx, cy] = toScreen(ov.car(), panels[0]);
+    const [cx, cy] = ov.car();
     sfx('SKRIIIII!', Math.max(cx + 60, 330), cy - 150, 78, -0.12, ['#ffffff', '#9fd8ff'], '#3c6cff');
     sfx('NHAC!', mx + 120, my - 200, 96, 0.1);
     caption(40, 40, 'UM SEGUNDO.', 62);
-    { const [ex, ey] = toScreen(ov.dogHead(), panels[1]); iconBalloon(1760, 120, ex + 40, ey - 60, 'bang', '#d8343c'); }
+    { const [ex, ey] = ov.eye(); iconBalloon(1780, 110, ex + 40, ey - 10, 'bang', '#d8343c'); }
   }
   if (MODE === 'B') {
     const p = panels[0];
     halftone(1420, 0, 500, 360, 'rgba(255,255,255,0.55)', 18, 'tl');
     panelFrames();
-    const [dx, dy] = toScreen(ov.dogHead(), p), [kx, ky] = toScreen(ov.cat(), p), [nx, ny] = toScreen(ov.can(), p), [px, py] = toScreen(ov.pigeons(), p), [ox, oy] = toScreen(ov.otavio(), p);
-    sfx('SPLOOSH!', dx + 40, dy + 330, 104, -0.08, ['#ffe08a', '#c07a2a'], '#5a3a1a');
-    sfx('FLAP FLAP!', Math.max(px + 80, 300), Math.max(py + 40, 120), 54, -0.15, ['#ffffff', '#c9d4ff'], '#5a6a8a');
+    const [dx, dy] = ov.dogHead(), [kx, ky] = ov.cat(), [nx, ny] = ov.can(), [px, py] = ov.pigeons(), [ox, oy] = ov.otavio();
+    sfx('SPLOOSH!', dx + 40, dy + 300, 92, -0.08, ['#ffe08a', '#c07a2a'], '#5a3a1a');
+    sfx('FLAP FLAP!', 760, 330, 54, -0.15, ['#ffffff', '#c9d4ff'], '#5a6a8a');
     sfx('KLANG!', nx + 150, ny - 90, 66, 0.16, ['#fff35a', '#ff8a1e']);
     iconBalloon(kx + 170, ky - 150, kx + 30, ky - 30, 'anger', '#d8343c');
     iconBalloon(dx - 190, dy - 210, dx - 40, dy - 40, 'star', '#f5b400');
     caption(1080, 40, 'A CIDADE RESOLVEU TESTAR A AMIZADE.', 48, 0.015);
-    speech(ox - 40, oy - 210, ox, oy - 40, ['...HEH.'], 44);
+    speech(ox + 250, oy - 60, ox + 50, oy + 10, ['...HEH.'], 44);
   }
   if (MODE === 'C') {
-    const p = panels[0]; const [cx, cy] = toScreen(ov.car(), p);
+    const p = panels[0]; const [cx, cy] = ov.car();
     speedLines(cx, cy, [0, 0, 1920, 1080], 90, 300, 'rgba(255,255,255,0.4)');
     halftone(0, 0, 900, 500, 'rgba(10,10,40,0.55)', 16, 'tl');
     panelFrames();
-    { const [bx, by] = toScreen(ov.car(), panels[0]); sfx('BIIIIIII!', Math.min(Math.max(bx, 520), 1350), by - 260, 96, -0.06, ['#ffffff', '#ffe14a'], '#d8343c'); }
-    const [dx, dy] = toScreen(ov.dogHead(), p);
+    { const [bx, by] = ov.car(); sfx('BIIIIIII!', Math.min(Math.max(bx, 520), 1350), by - 260, 96, -0.06, ['#ffffff', '#ffe14a'], '#d8343c'); }
+    const [dx, dy] = ov.dogHead();
     sfx('NHAC!!', dx - 120, dy + 220, 84, -0.12);
-    const [ix, iy] = toScreen(ov.dogHead(), panels[1]);
+    const [ix, iy] = ov.dogHead();
     sfx('GRRR', 1720, 690, 50, 0.1, ['#ffffff', '#ffd0a0'], '#8a3a2e');
     caption(40, 980, 'ELE NÃO PENSOU. SÓ PUXOU.', 54, 0.01);
   }
 }
 
 renderAll();
+const pctx = document.getElementById('px').getContext('2d');
+pctx.imageSmoothingEnabled = false;
+pctx.drawImage(glCanvas, 0, 0);
+drawSprites(pctx);
 overlay();
 window.__done = true;
