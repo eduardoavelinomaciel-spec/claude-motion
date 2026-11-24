@@ -25,7 +25,8 @@ function bloom(g, amount = 0.45, blur = 22) {
   const [c2, g2] = off(); g2.filter = `blur(${blur}px) brightness(1.2)`; g2.drawImage(g.canvas, 0, 0);
   g.save(); g.globalCompositeOperation = 'screen'; g.globalAlpha = amount; g.drawImage(c2, 0, 0); g.restore();
 }
-function rain(g, r, { n = 900, len = [30, 70], a = [0.15, 0.45], w = [1, 2], slant = 0.12, col = '200,220,255', clip = null } = {}) {
+function rain(g, r, opt = {}) { if (window.NO_RAIN) return; return rain_(g, r, opt); }
+function rain_(g, r, { n = 900, len = [30, 70], a = [0.15, 0.45], w = [1, 2], slant = 0.12, col = '200,220,255', clip = null } = {}) {
   g.save(); if (clip) clip(g); g.lineCap = 'round';
   for (let k = 0; k < n; k++) {
     const x = r() * (W + 200) - 100, y = r() * H, L = len[0] + r() * (len[1] - len[0]);
@@ -34,7 +35,7 @@ function rain(g, r, { n = 900, len = [30, 70], a = [0.15, 0.45], w = [1, 2], sla
   }
   g.restore();
 }
-function caption(g, x, y, text, size = 46) { post.push(() => caption_(g, x, y, text, size)); }
+function caption(g, x, y, text, size = 46) { if (window.NO_CAP) return; post.push(() => caption_(g, x, y, text, size)); }
 function caption_(g, x, y, text, size) {
   g.save(); g.textAlign = 'left'; g.font = `${size}px Bangers`; const w = g.measureText(text).width + 44, h = size + 26;
   g.fillStyle = 'rgba(0,0,0,0.85)'; g.fillRect(x + 7, y + 7, w, h);
@@ -98,6 +99,18 @@ function drawCar(g, O, u, v, up, { neon = ['#ff3cac', '#3cf2ff'], lit = true, gl
 }
 
 // ---------------- SHOT 3: the car rounds the corner ----------------
+function shot3Car(g, k, r) {
+  const L = (a, b) => a + (b - a) * k, sc = L(0.22, 1);
+  const O = [L(1520, 1180), L(700, 930)], u = [230 * sc, 40 * sc], v = [-170 * sc, -48 * sc], up = [0, -260 * sc];
+  const p = drawCar(g, O, u, v, up, { neon: ['#ff3cac', '#3cf2ff'] });
+  g.save(); g.globalCompositeOperation = 'lighter';
+  for (const a of [0.2, 1.52]) { const [x, y] = p(a, 0, 0.6); const bm = g.createRadialGradient(x, y, 10, x, y, 900 * Math.max(sc, 0.5)); bm.addColorStop(0, 'rgba(255,245,210,0.5)'); bm.addColorStop(1, 'rgba(255,245,210,0)'); g.fillStyle = bm; g.beginPath(); g.moveTo(x, y); g.lineTo(x + 1100, y - 260 * sc); g.lineTo(x + 900, y + 500 * sc); g.closePath(); g.fill(); }
+  g.restore();
+  const ry = O[1] - 10 * sc;
+  for (const a of [0.2, 0.44, 1.28, 1.52]) { const [x] = p(a, 0, 0.6); for (let yy = ry; yy < H; yy += 3) { const kk = (yy - ry) / (H - ry); g.globalAlpha = (1 - kk) * 0.55; g.fillStyle = '#fff3c8'; g.fillRect(x - 12 * sc + (r() - 0.5) * 30 * sc, yy, 24 * sc * (0.6 + r() * 0.8), 3); } } g.globalAlpha = 1;
+  for (let kk = 0; kk < 260 * sc; kk++) { const [x, y] = p(1.72, 0.85 + (r() - 0.5) * 0.3, 0.1); const a = -Math.PI / 2 - 0.6 + (r() - 0.5) * 1.4, d = r() * 180 * sc; g.fillStyle = `rgba(220,235,255,${0.25 + r() * 0.5})`; g.beginPath(); g.arc(x + Math.cos(a) * d + 40 * sc, y + Math.sin(a) * d * 0.6, (1 + r() * 3) * Math.max(sc, 0.5), 0, 7); g.fill(); }
+  return p;
+}
 function shot3(g, t) {
   const r = rng(33);
   const sk = g.createLinearGradient(0, 0, 0, 640); sk.addColorStop(0, '#07061a'); sk.addColorStop(0.7, '#2a1250'); sk.addColorStop(1, '#7a2a6a'); g.fillStyle = sk; g.fillRect(0, 0, W, 660);
@@ -113,18 +126,9 @@ function shot3(g, t) {
   // road
   const rd = g.createLinearGradient(0, 640, 0, H); rd.addColorStop(0, '#3a1a4a'); rd.addColorStop(1, '#07040e'); g.fillStyle = rd; g.fillRect(0, 640, W, H - 640);
   poly(g, [[0, 760], [760, 700], [800, 712], [0, 800]], '#2a1a3a');
-  // car
-  const O = [1180, 930], u = [230, 40], v = [-170, -48], up = [0, -260];
-  const p = drawCar(g, O, u, v, up, { neon: ['#ff3cac', '#3cf2ff'] });
-  // headlight beams toward camera-right + reflections
-  g.save(); g.globalCompositeOperation = 'lighter';
-  for (const a of [0.2, 1.52]) { const [x, y] = p(a, 0, 0.6); const bm = g.createRadialGradient(x, y, 10, x, y, 900); bm.addColorStop(0, 'rgba(255,245,210,0.5)'); bm.addColorStop(1, 'rgba(255,245,210,0)'); g.fillStyle = bm; g.beginPath(); g.moveTo(x, y); g.lineTo(x + 1100, y - 260); g.lineTo(x + 900, y + 500); g.closePath(); g.fill(); }
-  g.restore();
-  for (const a of [0.2, 0.44, 1.28, 1.52]) { const [x, y] = p(a, 0, 0.6); for (let yy = 920; yy < H; yy += 3) { const k = (yy - 920) / (H - 920); g.globalAlpha = (1 - k) * 0.55; g.fillStyle = '#fff3c8'; g.fillRect(x - 12 + (r() - 0.5) * 30, yy, 24 * (0.6 + r() * 0.8), 3); } } g.globalAlpha = 1;
-  // tyre spray
-  for (let k = 0; k < 260; k++) { const [x, y] = p(1.72, 0.85 + (r() - 0.5) * 0.3, 0.1); const a = -Math.PI / 2 - 0.6 + (r() - 0.5) * 1.4, d = r() * 180; g.fillStyle = `rgba(220,235,255,${0.25 + r() * 0.5})`; g.beginPath(); g.arc(x + Math.cos(a) * d + 40, y + Math.sin(a) * d * 0.6, 1 + r() * 3, 0, 7); g.fill(); }
   rain(g, rng(3), { n: 1100, len: [30, 60], a: [0.12, 0.3], w: [1, 1.6] });
-  for (const a of [0.2, 1.52]) { const [x, y] = p(a, 0, 0.6); rain(g, rng(Math.floor(x)), { n: 260, len: [40, 80], a: [0.4, 0.85], w: [1.2, 2.2], col: '255,245,225', clip: (gg) => { gg.beginPath(); gg.moveTo(x, y); gg.lineTo(x + 1100, y - 260); gg.lineTo(x + 900, y + 500); gg.closePath(); gg.clip(); } }); }
+  if (!window.SHOT3_NOCAR) { const p = shot3Car(g, 1, r);
+  for (const a of [0.2, 1.52]) { const [x, y] = p(a, 0, 0.6); rain(g, rng(Math.floor(x)), { n: 260, len: [40, 80], a: [0.4, 0.85], w: [1.2, 2.2], col: '255,245,225', clip: (gg) => { gg.beginPath(); gg.moveTo(x, y); gg.lineTo(x + 1100, y - 260); gg.lineTo(x + 900, y + 500); gg.closePath(); gg.clip(); } }); } }
   rain(g, rng(31), { n: 70, len: [120, 200], a: [0.12, 0.3], w: [2, 4] });
   bloom(g, 0.45, 24); grade(g, { vig: 0.55, seed: 4 });
 }
@@ -464,10 +468,9 @@ function shot8(g, t) {
 }
 
 const shots = { 1: shot1, 3: shot3, 4: shot4, 6: shot6, 8: shot8 };
-shots[SHOT](ctx, T);
-if (PX > 1) {
+function pixelate(ctx, PX = 4, LV = 12) {
   const w = Math.round(W / PX), h = Math.round(H / PX);
-  const [sc, sg] = off(w, h); sg.imageSmoothingQuality = 'high'; sg.drawImage(cv, 0, 0, w, h);
+  const [sc, sg] = off(w, h); sg.imageSmoothingQuality = 'high'; sg.drawImage(ctx.canvas, 0, 0, w, h);
   sg.filter = 'saturate(1.15) contrast(1.06)'; sg.drawImage(sc, 0, 0); sg.filter = 'none';
   const id = sg.getImageData(0, 0, w, h), d = id.data;
   const B4 = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
@@ -476,7 +479,12 @@ if (PX > 1) {
     for (let k = 0; k < 3; k++) { const v = d[i + k] / 255; d[i + k] = Math.round(Math.min(1, Math.max(0, Math.round(v * (LV - 1) + th * 0.45) / (LV - 1))) * 255); }
   }
   sg.putImageData(id, 0, 0);
-  ctx.imageSmoothingEnabled = false; ctx.clearRect(0, 0, W, H); ctx.drawImage(sc, 0, 0, W, H);
+  ctx.imageSmoothingEnabled = false; ctx.clearRect(0, 0, W, H); ctx.drawImage(sc, 0, 0, W, H); ctx.imageSmoothingEnabled = true;
 }
-post.forEach((f) => f());
+window.SH = { W, H, off, rng, glow, grade, bloom, rain: rain_, caption_, drawCar, rimSil, thick, poly, shots, shot3Car, pixelate, post };
+if (!window.ANIM) {
+  shots[SHOT](ctx, T);
+  if (PX > 1) pixelate(ctx, PX, LV);
+  post.forEach((f) => f());
 window.__done = true;
+}

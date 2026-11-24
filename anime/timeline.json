@@ -1,0 +1,31 @@
+{
+  "fps": 24,
+  "duration": 30,
+  "shots": [
+    { "id": 1, "start": 0.0, "end": 4.5, "name": "rua chuvosa" },
+    { "id": 2, "start": 4.5, "end": 7.5, "name": "mao e celular" },
+    { "id": 3, "start": 7.5, "end": 11.5, "name": "carro dobra a esquina" },
+    { "id": 4, "start": 11.5, "end": 15.0, "name": "olho do Caramelo" },
+    { "id": 5, "start": 15.0, "end": 18.5, "name": "patas nas pocas" },
+    { "id": 6, "start": 18.5, "end": 22.5, "name": "salto congelado" },
+    { "id": 7, "start": 22.5, "end": 25.0, "name": "estilhaca para o branco" },
+    { "id": 8, "start": 25.0, "end": 30.0, "name": "amanhecer" }
+  ],
+  "beats": {
+    "caption1": 1.0,
+    "phoneBuzz": 5.6,
+    "headlightsOn": 7.9,
+    "skid": 9.6,
+    "earUp": 12.6,
+    "eyeFlare": 13.8,
+    "splash1": 15.6,
+    "splash2": 16.9,
+    "splash3": 18.1,
+    "freeze": 18.5,
+    "nhac": 18.75,
+    "shatter": 22.5,
+    "white": 23.6,
+    "dawn": 25.0,
+    "caption8": 25.8
+  }
+}
