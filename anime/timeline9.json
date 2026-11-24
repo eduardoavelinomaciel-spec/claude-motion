@@ -1,0 +1,16 @@
+{
+  "fps": 24,
+  "duration": 20,
+  "shots": [
+    { "id": 1, "start": 0.0, "end": 6.0, "name": "3 quadros: a corrida" },
+    { "id": 2, "start": 6.0, "end": 13.0, "name": "salto, mordida, puxão" },
+    { "id": 3, "start": 13.0, "end": 18.0, "name": "o carro passa, a onda" },
+    { "id": 4, "start": 18.0, "end": 20.0, "name": "branco e silêncio" }
+  ],
+  "panels": [0.2, 0.9, 1.6],
+  "beats": {
+    "tap": 2.2,
+    "leap": 6.6, "bite": 8.2, "pull": 9.6, "phone": 9.8, "land": 11.6,
+    "car": 13.5, "wave": 14.5, "shwoosh": 14.7, "white": 17.0
+  }
+}
