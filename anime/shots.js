@@ -2,7 +2,8 @@
 const W = 1920, H = 1080;
 const cv = document.getElementById('c'), ctx = cv.getContext('2d');
 const Q = new URLSearchParams(location.search);
-const SHOT = Q.get('shot') || '1', T = parseFloat(Q.get('t') || '0');
+const SHOT = Q.get('shot') || '1', T = parseFloat(Q.get('t') || '0'), PX = parseInt(Q.get('px') || '1'), LV = parseInt(Q.get('lv') || '12');
+const post = [];
 await document.fonts.load('60px Bangers');
 
 const rng = (s) => () => ((s = (s * 16807) % 2147483647) / 2147483647);
@@ -33,7 +34,8 @@ function rain(g, r, { n = 900, len = [30, 70], a = [0.15, 0.45], w = [1, 2], sla
   }
   g.restore();
 }
-function caption(g, x, y, text, size = 46) {
+function caption(g, x, y, text, size = 46) { post.push(() => caption_(g, x, y, text, size)); }
+function caption_(g, x, y, text, size) {
   g.save(); g.textAlign = 'left'; g.font = `${size}px Bangers`; const w = g.measureText(text).width + 44, h = size + 26;
   g.fillStyle = 'rgba(0,0,0,0.85)'; g.fillRect(x + 7, y + 7, w, h);
   g.fillStyle = '#ffe066'; g.fillRect(x, y, w, h); g.lineWidth = 4; g.strokeStyle = '#111'; g.strokeRect(x, y, w, h);
@@ -316,11 +318,13 @@ function shot6(g, t) {
   bloom(g, 0.5, 28); grade(g, { vig: 0.55, seed: 6 });
   // comic freeze: subtle duotone + frame + single SFX
   g.save(); g.globalCompositeOperation = 'color'; g.fillStyle = 'rgba(120,60,160,0.25)'; g.fillRect(0, 0, W, H); g.restore();
+  post.push(() => {
   g.fillStyle = '#fff'; g.fillRect(0, 0, W, 34); g.fillRect(0, H - 34, W, 34); g.fillRect(0, 0, 34, H); g.fillRect(W - 34, 0, 34, H);
   g.lineWidth = 10; g.strokeStyle = '#111'; g.strokeRect(34, 34, W - 68, H - 68);
   g.save(); g.translate(430, 560); g.rotate(-0.1); g.font = '170px Bangers'; g.textAlign = 'center'; g.lineJoin = 'round';
   g.lineWidth = 26; g.strokeStyle = '#111'; g.strokeText('NHAC!', 8, 8); g.strokeText('NHAC!', 0, 0);
   const tg = g.createLinearGradient(0, -80, 0, 60); tg.addColorStop(0, '#fff36a'); tg.addColorStop(1, '#ff8a1e'); g.fillStyle = tg; g.fillText('NHAC!', 0, 0); g.restore();
+  });
 }
 
 // ---------------- SHOT 8: dawn, Caramelo asleep on cardboard ----------------
@@ -376,4 +380,18 @@ function shot8(g, t) {
 
 const shots = { 1: shot1, 4: shot4, 6: shot6, 8: shot8 };
 shots[SHOT](ctx, T);
+if (PX > 1) {
+  const w = Math.round(W / PX), h = Math.round(H / PX);
+  const [sc, sg] = off(w, h); sg.imageSmoothingQuality = 'high'; sg.drawImage(cv, 0, 0, w, h);
+  sg.filter = 'saturate(1.15) contrast(1.06)'; sg.drawImage(sc, 0, 0); sg.filter = 'none';
+  const id = sg.getImageData(0, 0, w, h), d = id.data;
+  const B4 = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const i = (y * w + x) * 4, th = (B4[(y % 4) * 4 + (x % 4)] + 0.5) / 16 - 0.5;
+    for (let k = 0; k < 3; k++) { const v = d[i + k] / 255; d[i + k] = Math.round(Math.min(1, Math.max(0, Math.round(v * (LV - 1) + th * 0.45) / (LV - 1))) * 255); }
+  }
+  sg.putImageData(id, 0, 0);
+  ctx.imageSmoothingEnabled = false; ctx.clearRect(0, 0, W, H); ctx.drawImage(sc, 0, 0, W, H);
+}
+post.forEach((f) => f());
 window.__done = true;
