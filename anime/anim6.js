@@ -335,22 +335,28 @@ function shotKneel(t, zoom, zc, sh = [0, 0]) {
 
 // ---------- shot 4: silhouettes on the curb, crane up ----------
 function silhouettes(g, t, dy, sc) {
-  g.save(); g.translate(880, 900 + dy); g.scale(sc, sc); g.translate(-880, -900);
-  g.fillStyle = '#000';
-  // man from behind, sitting
-  g.beginPath(); g.moveTo(640, 660); g.quadraticCurveTo(760, 620, 880, 660); g.lineTo(905, 900); g.lineTo(615, 900); g.closePath(); g.fill();
-  g.beginPath(); g.ellipse(760, 620, 30, 30, 0, 0, 7); g.fill();
-  g.beginPath(); g.ellipse(762, 560, 70, 76, 0.05, 0, 7); g.fill();
-  for (const [x, y, a] of [[720, 500, -0.5], [760, 488, 0], [800, 498, 0.5], [820, 520, 0.9]]) { g.save(); g.translate(x, y); g.rotate(a); g.beginPath(); g.moveTo(-16, 10); g.lineTo(0, -34); g.lineTo(16, 10); g.closePath(); g.fill(); g.restore(); }
-  E(g, 690, 560, 14, 22, 0, '#000'); E(g, 834, 562, 14, 22, 0, '#000');
-  g.lineCap = 'round'; g.strokeStyle = '#000'; g.lineWidth = 50; g.beginPath(); g.moveTo(860, 680); g.quadraticCurveTo(930, 700, 975, 770 + Math.sin(t * 1.5) * 4); g.stroke();
-  g.beginPath(); g.roundRect(500, 800, 100, 100, 24); g.fill();
-  // dog from behind, leaning on him
-  g.save(); g.translate(1010, 900); g.rotate(-0.12);
-  g.beginPath(); g.ellipse(0, -100, 82, 104, 0, 0, 7); g.fill(); g.beginPath(); g.ellipse(-4, -230, 56, 52, 0, 0, 7); g.fill();
-  g.beginPath(); g.moveTo(-40, -262); g.lineTo(-30, -330); g.lineTo(-4, -268); g.closePath(); g.fill();
-  g.beginPath(); g.moveTo(20, -268); g.quadraticCurveTo(70, -280, 66, -224); g.quadraticCurveTo(50, -240, 30, -244); g.closePath(); g.fill();
-  g.lineWidth = 26; g.beginPath(); g.moveTo(50, -14); g.quadraticCurveTo(130, 0, 150 + Math.sin(t * 3) * 14, -40 + Math.sin(t * 3) * 10); g.stroke();
+  g.save(); g.translate(880, 960 + dy); g.scale(sc, sc); g.translate(-880, -960);
+  g.fillStyle = '#000'; g.strokeStyle = '#000'; g.lineCap = 'round';
+  // Otávio standing, seen from behind: legs, long coat, backpack, head
+  for (const [x, dx] of [[728, -6], [792, 6]]) { g.lineWidth = 40; g.beginPath(); g.moveTo(x, 740); g.lineTo(x + dx, 945); g.stroke(); g.beginPath(); g.ellipse(x + dx, 952, 30, 12, 0, 0, 7); g.fill(); }
+  g.beginPath(); g.moveTo(668, 420); g.quadraticCurveTo(760, 392, 852, 420); g.lineTo(880, 780); g.quadraticCurveTo(760, 796, 640, 780); g.closePath(); g.fill();
+  g.lineWidth = 44; g.beginPath(); g.moveTo(672, 440); g.quadraticCurveTo(640, 560, 646, 690); g.stroke(); E(g, 646, 706, 22, 26, 0, '#000');
+  g.beginPath(); g.moveTo(848, 440); g.quadraticCurveTo(890, 600, 930 + Math.sin(t * 1.4) * 4, 748); g.stroke(); E(g, 936 + Math.sin(t * 1.4) * 4, 760, 24, 22, 0, '#000');
+  g.beginPath(); g.roundRect(702, 432, 116, 200, 26); g.fill();
+  g.beginPath(); g.ellipse(760, 392, 28, 26, 0, 0, 7); g.fill();
+  g.beginPath(); g.ellipse(762, 330, 62, 68, 0.05, 0, 7); g.fill();
+  for (const [x, y, a] of [[722, 278, -0.5], [758, 266, 0], [796, 276, 0.5], [814, 298, 0.9]]) { g.save(); g.translate(x, y); g.rotate(a); g.beginPath(); g.moveTo(-14, 10); g.lineTo(0, -30); g.lineTo(14, 10); g.closePath(); g.fill(); g.restore(); }
+  E(g, 698, 334, 12, 20, 0, '#000'); E(g, 826, 336, 12, 20, 0, '#000');
+  // Caramelo standing beside him, from behind, head under his hand
+  g.save(); g.translate(1000, 960);
+  for (const x of [-34, 34]) { g.lineWidth = 30; g.beginPath(); g.moveTo(x, -130); g.lineTo(x * 0.9, -10); g.stroke(); g.beginPath(); g.ellipse(x * 0.9, -6, 20, 10, 0, 0, 7); g.fill(); }
+  g.beginPath(); g.ellipse(0, -160, 76, 72, 0, 0, 7); g.fill(); g.beginPath(); g.ellipse(-14, -236, 50, 56, -0.2, 0, 7); g.fill();
+  g.save(); g.translate(-30, -318); g.rotate(-0.25 + Math.sin(t * 1.4) * 0.03);
+  g.beginPath(); g.ellipse(0, 0, 52, 48, 0, 0, 7); g.fill(); g.beginPath(); g.ellipse(14, 44, 30, 26, 0, 0, 7); g.fill();
+  g.beginPath(); g.moveTo(-38, -24); g.lineTo(-30, -96); g.lineTo(-6, -32); g.closePath(); g.fill();
+  g.beginPath(); g.moveTo(18, -36); g.quadraticCurveTo(66, -44, 64, 14); g.quadraticCurveTo(48, -4, 28, -10); g.closePath(); g.fill();
+  g.restore();
+  const w = Math.sin(t * 6) * 0.35; g.lineWidth = 22; g.beginPath(); g.moveTo(40, -190); g.quadraticCurveTo(110 + w * 30, -210, 120 + w * 50, -270); g.stroke();
   g.restore();
   g.restore();
 }
@@ -373,14 +379,14 @@ function street4(g, dy) {
   const rf = g.createLinearGradient(0, vp[1], 0, H); rf.addColorStop(0, 'rgba(255,230,170,0.9)'); rf.addColorStop(1, 'rgba(255,170,120,0.2)'); g.fillStyle = rf; g.beginPath(); g.moveTo(vp[0] - 20, vp[1]); g.lineTo(vp[0] + 20, vp[1]); g.lineTo(vp[0] + 220, H + 400); g.lineTo(vp[0] - 220, H + 400); g.closePath(); g.fill();
   g.restore();
   // curb + sidewalk in the foreground
-  g.save(); g.translate(0, dy); g.fillStyle = '#3a1a30'; g.fillRect(0, 900, W, 400); g.fillStyle = 'rgba(255,170,120,0.6)'; g.fillRect(0, 898, W, 5); g.restore();
+  { const sw = g.createLinearGradient(0, 860, 0, H); sw.addColorStop(0, 'rgba(58,26,48,0)'); sw.addColorStop(0.35, '#3a1a30'); sw.addColorStop(1, '#24101e'); g.fillStyle = sw; g.fillRect(0, 860, W, H - 860); const rf2 = g.createLinearGradient(0, 900, 0, H); rf2.addColorStop(0, 'rgba(255,210,150,0.35)'); rf2.addColorStop(1, 'rgba(255,170,120,0)'); g.fillStyle = rf2; g.beginPath(); g.moveTo(SUN[0] - 120, 900); g.lineTo(SUN[0] + 120, 900); g.lineTo(SUN[0] + 260, H); g.lineTo(SUN[0] - 260, H); g.closePath(); g.fill(); }
 }
 function shot4(t, lt) {
-  const up = ease(lt / 6), dy = up * 220, sc = 1 - up * 0.3, cdy = up * 40;
+  const up = ease(lt / 6), dy = up * 220, sc = 1 - up * 0.25, cdy = up * 20;
   street4(ctx, dy);
   rimSil(ctx, (m) => silhouettes(m, t, cdy, sc), { col: '#ffcf8a', dx: 0, dy: -5, blur: 10, fill: '#1a0c18' });
   // scarf, the one colour in the silhouette
-  ctx.save(); ctx.translate(880, 900 + cdy); ctx.scale(sc, sc); ctx.translate(-880, -900); ctx.fillStyle = "#6a1820"; ctx.beginPath(); ctx.roundRect(704, 604, 116, 30, 14); ctx.fill(); ctx.beginPath(); ctx.moveTo(790, 620); ctx.quadraticCurveTo(800 + Math.sin(t * 2) * 6, 700, 786, 760); ctx.lineTo(812, 760); ctx.quadraticCurveTo(820, 690, 818, 620); ctx.closePath(); ctx.fill(); ctx.restore();
+  ctx.save(); ctx.translate(880, 960 + cdy); ctx.scale(sc, sc); ctx.translate(-880, -960); ctx.fillStyle = "#6a1820"; ctx.beginPath(); ctx.roundRect(712, 380, 100, 28, 12); ctx.fill(); ctx.beginPath(); ctx.moveTo(780, 396); ctx.quadraticCurveTo(792 + Math.sin(t * 2) * 6, 470, 780, 540); ctx.lineTo(804, 540); ctx.quadraticCurveTo(812, 466, 806, 396); ctx.closePath(); ctx.fill(); ctx.restore();
   bloom(ctx, 0.35, 30); grade(ctx, { vig: 0.55, seed: 64 });
 }
 
