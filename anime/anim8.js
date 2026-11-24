@@ -252,42 +252,40 @@ const NEON = ['#ff3cac', '#3cf2ff', '#ffd23c', '#5dff7a', '#b06bff'];
 const night = (g, a = 0.35) => { g.save(); g.globalCompositeOperation = 'multiply'; g.fillStyle = `rgba(70,60,140,${a})`; g.fillRect(0, 0, W, H); g.restore(); };
 
 // ---------- shot 1: straight down on the crossing ----------
-const TOP = layer((g) => {
-  const r = rng(8801); g.fillStyle = '#1e1430'; g.fillRect(0, 0, W, H);
-  for (let k = 0; k < 26000; k++) { g.fillStyle = r() > 0.5 ? 'rgba(80,60,110,0.35)' : 'rgba(5,2,15,0.4)'; g.fillRect(r() * W, r() * H, 2 + r() * 3, 2 + r() * 3); }
-  // sidewalks top and bottom, curb
-  for (const [y0, y1] of [[0, 150], [930, H]]) { g.fillStyle = '#3a3048'; g.fillRect(0, y0, W, y1 - y0); g.fillStyle = 'rgba(10,6,20,0.7)'; for (let x = -60; x < W; x += 120) { g.beginPath(); for (let u = 0; u <= 1; u += 0.1) g.lineTo(x + u * 120, (y0 + y1) / 2 + Math.sin(u * Math.PI * 2) * 22); g.lineTo(x + 120, (y0 + y1) / 2 + 14); for (let u = 1; u >= 0; u -= 0.1) g.lineTo(x + u * 120, (y0 + y1) / 2 + 14 + Math.sin(u * Math.PI * 2) * 22); g.fill(); } }
-  g.fillStyle = '#8a8098'; g.fillRect(0, 150, W, 10); g.fillRect(0, 920, W, 10);
-  // crosswalk
-  for (let k = 0; k < 9; k++) { g.fillStyle = 'rgba(230,226,240,0.85)'; g.fillRect(700 + k * 62, 190, 36, 700); for (let j = 0; j < 40; j++) { g.fillStyle = 'rgba(30,20,50,0.5)'; g.fillRect(700 + k * 62 + r() * 30, 190 + r() * 690, 6 + r() * 10, 4 + r() * 10); } }
-  // lane marking
-  for (let x = 0; x < W; x += 180) if (x < 640 || x > 1300) { g.fillStyle = '#d8c060'; g.fillRect(x, 536, 100, 10); }
-  // puddles with neon reflections
-  const [pc, pg] = off(); pg.filter = 'blur(22px)';
-  for (let k = 0; k < 14; k++) { const x = r() * W, y = 180 + r() * 720, c = NEON[k % 5]; pg.globalAlpha = 0.55; pg.fillStyle = c; pg.beginPath(); pg.ellipse(x, y, 80 + r() * 160, 40 + r() * 70, r() * 3, 0, 7); pg.fill(); }
-  g.save(); g.globalCompositeOperation = 'lighter'; g.drawImage(pc, 0, 0); g.restore();
-  for (let k = 0; k < 10; k++) { g.fillStyle = 'rgba(120,140,220,0.18)'; g.beginPath(); g.ellipse(r() * W, 200 + r() * 680, 120 + r() * 140, 50 + r() * 60, r() * 3, 0, 7); g.fill(); }
-});
 const DROPS = (() => { const r = rng(8802); return Array.from({ length: 900 }, () => ({ x: r() * W, y: r() * H, t0: 7 * Math.sqrt(r()), s: 0.6 + r() * 0.8 })); })();
-function topMan(g, x, y, t) { // seen from straight above, walking up the screen
-  const ph = t * 4.2;
-  for (const [dx, p] of [[-26, 0], [26, Math.PI]]) { const st = Math.sin(ph + p) * 30; E(g, x + dx, y + st, 18, 30, 0, '#2a1a10'); }
-  E(g, x, y + 10, 92, 54, 0, '#8c7450'); E(g, x, y + 4, 86, 48, 0, '#b69c70');
-  g.fillStyle = '#5a5e68'; g.beginPath(); g.roundRect(x - 50, y + 10, 100, 60, 18); g.fill(); // backpack
-  E(g, x - 80, y - 30, 22, 34, 0.4, '#a08458'); E(g, x + 80, y - 30, 22, 34, -0.4, '#a08458'); // arms forward
-  E(g, x, y - 26, 64, 22, 0, '#b8343a'); // scarf
-  E(g, x, y - 34, 40, 44, 0, '#2a2024'); for (let k = 0; k < 6; k++) { const a = k * 1.05; E(g, x + Math.cos(a) * 34, y - 34 + Math.sin(a) * 36, 12, 8, a, '#2a2024'); }
-  glow(g, x, y - 110, 120, 'rgba(160,230,255,0.9)', 0.8); g.fillStyle = '#cfeeff'; g.fillRect(x - 14, y - 104, 28, 18); // phone glow
-}
+// low camera at a puddle; his shoes step in and break the reflection
+const PGY = 770, PUD = [980, 830, 760, 150], TW0 = 3.4, WX0 = -520, WV = 506, WS = 2.2, PH0 = 0;
+const manX = (t) => WX0 + (t - TW0) * WV, manPh = (t) => (t - TW0) * 4.2 + PH0;
+const STRIKES = (() => { const out = []; for (let n = 0; n < 12; n++) { const ph = Math.PI / 2 + n * Math.PI, t = TW0 + (ph - PH0) / 4.2, x = manX(t) + 326; if (Math.abs(x - PUD[0]) / PUD[2] < 0.85) out.push([t, x]); } return out; })();
+let BG8A = null, GR8A = null;
+const PUDP = (() => { const p2 = new Path2D(); p2.ellipse(PUD[0], PUD[1], PUD[2], PUD[3], 0, 0, 7); p2.ellipse(PUD[0] - 520, PUD[1] + 60, 300, 90, 0.1, 0, 7); p2.ellipse(PUD[0] + 560, PUD[1] - 20, 260, 70, -0.08, 0, 7); return p2; })();
 function shot1(t, lt) {
-  ctx.save(); const z = 1.05 + 0.08 * lt / 7, rot = -0.04 + 0.06 * lt / 7; ctx.translate(W / 2, H / 2); ctx.rotate(rot); ctx.scale(z, z); ctx.translate(-W / 2, -H / 2);
-  ctx.drawImage(TOP, 0, 0);
-  for (const d of DROPS) { const k = (t - d.t0) / 0.6; if (k < 0 || k > 1) continue; ctx.strokeStyle = `rgba(200,220,255,${0.6 * (1 - k)})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(d.x, d.y, 6 + 40 * k * d.s, (6 + 40 * k * d.s) * 0.9, 0, 0, 7); ctx.stroke(); }
-  topMan(ctx, 970, 900 - lt * 52, t);
+  if (!BG8A) { BG8A = layer((g) => { g.fillStyle = '#07061a'; g.fillRect(0, 0, W, H); g.save(); g.filter = 'blur(7px)'; g.translate(0, 60); g.drawImage(ACROSS, -96, -60, W * 1.1, H * 1.1); g.restore(); });
+    GR8A = layer((g) => { const r = rng(8811); const gr = g.createLinearGradient(0, 640, 0, H); gr.addColorStop(0, 'rgba(30,18,50,0)'); gr.addColorStop(0.15, '#24163a'); gr.addColorStop(1, '#0c0716'); g.fillStyle = gr; g.fillRect(0, 640, W, H - 640);
+      for (let k = 0; k < 14000; k++) { const y = 680 + r() * 400; g.fillStyle = r() > 0.5 ? 'rgba(90,70,130,0.35)' : 'rgba(0,0,0,0.4)'; const sz = 1 + (y - 680) / 120 + r() * 2; g.fillRect(r() * W, y, sz, sz * 0.7); }
+      const [rc, rg] = off(); rg.filter = 'blur(18px)'; for (const [x, c] of [[380, '#5dff7a'], [900, '#ff3cac'], [1440, '#ffc46a'], [1700, '#3cf2ff']]) { rg.fillStyle = c; rg.globalAlpha = 0.35; rg.fillRect(x - 60, 700, 120, 380); } g.save(); g.globalCompositeOperation = 'lighter'; g.drawImage(rc, 0, 0); g.restore(); }); }
+  ctx.drawImage(BG8A, 0, 0); ctx.drawImage(GR8A, 0, 0);
+  const x = manX(t), ph = manPh(t), walking = t > TW0 - 0.2;
+  // reflection: neon sky squeezed + his legs mirrored at the contact line
+  const hits = STRIKES.filter(([ts]) => t > ts);
+  const amp = 4 + 2 * lt + hits.reduce((a, [ts]) => a + 60 * Math.exp(-(t - ts) * 2.2), 0);
+  const [rc, rg] = off();
+  rg.save(); rg.translate(0, PGY - 100 + 620 * 0.62); rg.scale(1, -0.62); rg.drawImage(BG8A, 0, 0, W, 620, 0, 0, W, 620); rg.restore();
+  if (walking) { rg.save(); rg.translate(0, 2 * PGY); rg.scale(1, -1); otavio(rg, x, PGY, WS, ph, 0.35); rg.restore(); }
+  ctx.save(); ctx.clip(PUDP);
+  ctx.fillStyle = '#0a0618'; ctx.fillRect(0, 0, W, H);
+  for (let y = PUD[1] - PUD[3]; y < PUD[1] + PUD[3]; y += 6) { const off2 = Math.sin(y * 0.09 + t * 7) * amp * 0.5 + Math.sin(y * 0.031 - t * 3) * amp * 0.5; ctx.drawImage(rc, 0, y, W, 6, off2, y, W, 6); }
+  ctx.fillStyle = 'rgba(40,60,140,0.18)'; ctx.fillRect(0, 0, W, H);
+  for (const [ts, sx] of hits) for (let i = 0; i < 3; i++) { const k = (t - ts - i * 0.12) / 1.2; if (k > 0 && k < 1) { ctx.strokeStyle = `rgba(230,240,255,${0.8 * (1 - k)})`; ctx.lineWidth = 4; ctx.beginPath(); ctx.ellipse(sx, PGY + 6, 30 + k * 420, (30 + k * 420) * 0.2, 0, 0, 7); ctx.stroke(); } }
   ctx.restore();
-  // falling rain seen from above: short streaks radiating from the centre
-  const r = rng(Math.floor(t * 24)); const n = 300 + Math.floor(lt * 120); ctx.strokeStyle = 'rgba(210,225,255,0.45)'; ctx.lineWidth = 2; for (let k = 0; k < n; k++) { const x = r() * W, y = r() * H, dx = (x - W / 2) * 0.03, dy = (y - H / 2) * 0.03; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + dx, y + dy); ctx.stroke(); }
-  bloom(ctx, 0.35, 22); grade(ctx, { vig: 0.65, seed: 81 });
+  ctx.save(); ctx.filter = 'blur(6px)'; ctx.strokeStyle = 'rgba(20,12,36,0.9)'; ctx.lineWidth = 16; ctx.stroke(PUDP); ctx.restore();
+  // drops ringing on the wet ground, more and more
+  for (const d of DROPS) { const k = (t - d.t0) / 0.6; if (k < 0 || k > 1) continue; const y = 690 + (d.y / H) * 390, sc2 = 0.4 + (y - 690) / 390; ctx.strokeStyle = `rgba(200,220,255,${0.55 * (1 - k)})`; ctx.lineWidth = 1.5 + sc2; ctx.beginPath(); ctx.ellipse(d.x, y, (4 + 30 * k * d.s) * sc2, (4 + 30 * k * d.s) * sc2 * 0.25, 0, 0, 7); ctx.stroke(); }
+  if (walking) otavio(ctx, x, PGY, WS, ph, 0.35);
+  // splash drops thrown up by each step
+  for (const [ts, sx] of hits) { const k = t - ts; if (k > 0.9) continue; const r = rng(Math.floor(ts * 100)); for (let i = 0; i < 26; i++) { const a = -Math.PI * (0.1 + r() * 0.8), v = 300 + r() * 500, px = sx + Math.cos(a) * v * k, py = PGY + Math.sin(a) * v * k + 1400 * k * k; if (py > PGY + 20) continue; E(ctx, px, py, 4 + r() * 5, 6 + r() * 6, 0, 'rgba(220,235,255,0.85)'); } }
+  rainFx(ctx, rng(Math.floor(t * 24)), { n: 500 + Math.floor(lt * 120), len: [30, 60], a: [0.15, 0.35], w: [1, 1.8] });
+  bloom(ctx, 0.4, 24); grade(ctx, { vig: 0.6, seed: 81 });
 }
 
 // ---------- shot 2: from behind at the crossing ----------
@@ -413,7 +411,7 @@ function thoughtWorries(g, k, cx, cy, tx, ty) {
     g.fillStyle = '#111'; g.font = '50px Bangers'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('CONTAS... PRAZO... JANTAR...', cx, cy + 70);
   }, true);
 }
-function tsss(g, t) { const r = rng(8807); for (let i = 0; i < 9; i++) { const t0 = B.tsss + i * 0.6, x = 160 + r() * 1600, y = 120 + r() * 840, sz = 26 + r() * 14; const k = (t - t0) / 0.3; if (k > 0) sfx(g, 'TSSSSHHH', x, y, sz, (r() - 0.5) * 0.3, Math.min(k, 1), ['#e8f0ff', '#8aa0d8'], '#2a3a6a'); } }
+function tsss(g, t) { const r = rng(8807); for (let i = 0; i < 6; i++) { const t0 = B.tsss + i * 0.9, x = 160 + r() * 1600, y = 120 + r() * 840, sz = 26 + r() * 14; const k = (t - t0) / 0.3; if (k > 0) sfx(g, 'TSSSSHHH', x, y, sz, (r() - 0.5) * 0.3, Math.min(k, 1), ['#e8f0ff', '#8aa0d8'], '#2a3a6a'); } }
 
 function render(t) {
   const s = TL.shots.find((x) => t >= x.start && t < x.end) || TL.shots[TL.shots.length - 1];

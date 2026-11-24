@@ -3,6 +3,7 @@
     python3 -m sfx sfx/cues/cena8.py
 """
 
+import math
 import random
 
 from sfx.synth import bandnoise, blip, click, envelope, pad, pop, riser, whoosh
@@ -38,6 +39,17 @@ def score(mix, tl):
         put(t, click(2600 + rnd.random() * 1500, 0.015), 0.03 + 0.03 * min(1.0, t / 7), rnd.uniform(-0.9, 0.9))
         t += 0.05 + rnd.random() * (0.25 - 0.18 * min(1.0, t / 7))
 
+    # opening shot: his shoes step through the puddle (same maths as anim8.js STRIKES)
+    for n in range(12):
+        ts = 3.4 + (math.pi / 2 + n * math.pi) / 4.2
+        if ts >= s[1]["end"]:
+            break
+        x = -520 + (ts - 3.4) * 506 + 326
+        pan = max(-0.9, min(0.9, (x - 960) / 960))
+        put(ts, pop(160, 90, dur=0.1), 0.2, pan)
+        if abs(x - 980) / 760 < 0.85:
+            put(ts, bandnoise(int(0.45 * SR), lambda k: 1800 - k / 20, q=0.7), 0.22, pan)
+            put(ts + 0.05, whoosh(0.3, 2200, 900, peak=0.2), 0.08, pan)
     # phone: a few soft notification blips while he scrolls
     for k, tt in enumerate([s[2]["start"] + 0.8, s[2]["start"] + 3.1, s[2]["start"] + 5.6]):
         put(tt, blip(1318.51, dur=0.15, tau=0.04), 0.05, -0.2)
