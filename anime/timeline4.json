@@ -1,0 +1,20 @@
+{
+  "fps": 24,
+  "duration": 33.5,
+  "shots": [
+    { "id": 1, "start": 0.0, "end": 6.5, "name": "de dentro: vitrine embaçada, Caramelo esperando" },
+    { "id": 2, "start": 6.5, "end": 11.0, "name": "close do Caramelo + relógio pula" },
+    { "id": 3, "start": 11.0, "end": 15.0, "name": "mãos da padeira deixam o pão" },
+    { "id": 4, "start": 15.0, "end": 19.5, "name": "metade guardada no canto" },
+    { "id": 5, "start": 19.5, "end": 26.5, "name": "Otávio sai e quase tropeça" },
+    { "id": 6, "start": 26.5, "end": 33.5, "name": "rack focus: ele entendeu amigo" }
+  ],
+  "cuts": { "clockIn": 7.9, "clockOut": 9.3 },
+  "beats": {
+    "cap1": 1.0, "cap2": 8.1,
+    "handDown": 11.2, "release": 12.6, "paws": 13.5,
+    "chew": 15.2, "glint": 16.0, "icon": 16.6,
+    "opa": 22.0, "sai": 23.4,
+    "focus": 28.4, "hearts": 29.6, "abana": 30.5
+  }
+}
