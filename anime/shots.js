@@ -105,8 +105,8 @@ function shot3(g, t) {
   poly(g, [[0, 0], [760, 0], [760, 700], [0, 760]], '#1a1030'); poly(g, [[760, 0], [900, 60], [900, 660], [760, 700]], '#120a24');
   for (let y = 60; y < 640; y += 95) for (let x = 60; x < 700; x += 130) { const lit = r() > 0.4; g.fillStyle = lit ? ['#ffc46a', '#ffe3a0', '#ff8ad0'][Math.floor(r() * 3)] : '#0c0818'; g.fillRect(x, y, 70, 60); if (lit) glow(g, x + 35, y + 30, 90, 'rgba(255,190,110,0.35)', 0.5); }
   // shopfront neon on corner
-  g.save(); g.shadowColor = '#3cf2ff'; g.shadowBlur = 40; g.strokeStyle = '#3cf2ff'; g.lineWidth = 6; g.strokeRect(80, 520, 560, 120); g.restore();
-  g.save(); g.font = '78px Bangers'; g.fillStyle = '#bff8ff'; g.shadowColor = '#3cf2ff'; g.shadowBlur = 30; g.textAlign = 'center'; g.fillText('LANCHONETE', 360, 610); g.restore();
+  g.save(); g.shadowColor = '#3cf2ff'; g.shadowBlur = 40; g.strokeStyle = '#3cf2ff'; g.lineWidth = 6; g.strokeRect(60, 330, 380, 110); g.restore();
+  g.save(); g.font = '70px Bangers'; g.fillStyle = '#bff8ff'; g.shadowColor = '#3cf2ff'; g.shadowBlur = 30; g.textAlign = 'center'; g.fillText('LANCHONETE', 250, 410); g.restore();
   // far street on the right
   for (let x = 900; x < W;) { const w = 80 + r() * 140, h = 160 + r() * 300; g.fillStyle = '#160d2c'; g.fillRect(x, 640 - h, w, h + 20); for (let k = 0; k < 10; k++) if (r() > 0.4) { g.fillStyle = ['#ffc46a', '#ff8ad0', '#7af0ff'][Math.floor(r() * 3)]; g.globalAlpha = 0.7; g.fillRect(x + 8 + r() * (w - 24), 640 - h + 15 + r() * (h - 40), 9, 12); g.globalAlpha = 1; } x += w + 6; }
   for (const [x, c] of [[1180, '#ff3cac'], [1500, '#ffd23c'], [1760, '#5dff7a']]) { glow(g, x, 450, 160, c, 0.5); g.fillStyle = c; g.fillRect(x - 30, 400, 60, 100); }
@@ -346,7 +346,7 @@ function shot6(g, t) {
   const gr = g.createLinearGradient(0, GY, 0, H); gr.addColorStop(0, '#2a1440'); gr.addColorStop(1, '#07040e'); g.fillStyle = gr; g.fillRect(0, GY, W, H - GY);
   // car front (dark) + headlights
   const car = new Path2D(); car.moveTo(1240, GY + 20); car.lineTo(1250, 690); car.quadraticCurveTo(1270, 600, 1400, 590); car.lineTo(1960, 560); car.lineTo(1960, GY + 30); car.closePath();
-  const cp = drawCar(g, [1150, 915], [280, -14], [175, -55], [0, -280], { neon: ['#ff3cac', '#b06bff'], glowK: 0.6 });
+  const cp = drawCar(g, [1200, 912], [170, -4], [100, -12], [0, -190], { neon: ['#ff3cac', '#b06bff'], glowK: 0.6 });
   const HL = [[0.2, 0.6], [1.52, 0.6]].map(([a, h]) => cp(a, 0, h));
   // beams
   g.save(); g.globalCompositeOperation = 'lighter';
@@ -374,19 +374,26 @@ function shot6(g, t) {
   dog.bezierCurveTo(360, 640, 340, 600, 345, 575); dog.bezierCurveTo(352, 600, 360, 630, 380, 646); // tail
   dog.lineTo(330, 690); dog.lineTo(300, 700); dog.lineTo(304, 708); dog.lineTo(345, 702); // hind legs back
   dog.bezierCurveTo(400, 720, 450, 740, 500, 752); dog.lineTo(548, 800); dog.lineTo(560, 796); dog.lineTo(538, 760); dog.lineTo(575, 772); dog.lineTo(590, 772); dog.closePath();
+  glow(g, 400, 710, 300, 'rgba(255,236,200,0.85)', 0.75); glow(g, 400, 710, 140, 'rgba(255,250,235,0.9)', 0.6);
   rimSil(g, (mg) => { mg.fill(man);
-    // Caramelo mid-leap, biting the coat hem
-    mg.save(); mg.translate(470, 705); mg.rotate(-0.18); mg.beginPath(); mg.ellipse(0, 0, 100, 44, 0, 0, 7); mg.fill(); mg.beginPath(); mg.ellipse(-60, 6, 46, 40, 0, 0, 7); mg.fill(); mg.restore();
-    mg.beginPath(); mg.ellipse(565, 705, 44, 40, 0, 0, 7); mg.fill();
-    mg.save(); mg.translate(608, 722); mg.rotate(0.35); mg.beginPath(); mg.ellipse(0, 0, 52, 26, 0, 0, 7); mg.fill(); mg.restore(); mg.beginPath(); mg.ellipse(520, 735, 50, 40, 0.3, 0, 7); mg.fill();
-    mg.beginPath(); mg.moveTo(540, 678); mg.lineTo(548, 618); mg.lineTo(580, 672); mg.closePath(); mg.fill();
-    mg.beginPath(); mg.moveTo(530, 684); mg.quadraticCurveTo(498, 700, 508, 742); mg.lineTo(538, 716); mg.closePath(); mg.fill();
-    thick(mg, 30, [[530, 728], [575, 770], [592, 805]]); thick(mg, 28, [[505, 735], [545, 780], [555, 818]]);
-    thick(mg, 32, [[405, 712], [350, 720], [300, 712]]); thick(mg, 30, [[400, 730], [345, 748], [305, 752]]);
-    thick(mg, 24, [[392, 690], [350, 668], [318, 660]]); mg.beginPath(); mg.ellipse(312, 659, 16, 11, 0.2, 0, 7); mg.fill();
-    for (let k = 0; k < 40; k++) { const a = rng(k + 3)() * 6.28; mg.beginPath(); mg.arc(470 + Math.cos(a) * 100, 705 + Math.sin(a) * 40, 7, 0, 7); mg.fill(); }
-    // coat hem pulled into the mouth
-    mg.beginPath(); mg.moveTo(640, 770); mg.quadraticCurveTo(625, 760, 612, 740); mg.lineTo(630, 730); mg.lineTo(660, 760); mg.closePath(); mg.fill();
+    // Caramelo mid-leap, side profile facing right: long snout, one ear up, one folded, tail straight back
+    mg.save(); mg.translate(-95, -6);
+    const E2 = (x, y, rx, ry, rt = 0) => { mg.beginPath(); mg.ellipse(x, y, rx, ry, rt, 0, 7); mg.fill(); };
+    const taper = (pts, w0, w1) => { for (let k = 0; k < pts.length - 1; k++) { const t0 = k / (pts.length - 1), t1 = (k + 1) / (pts.length - 1); thick(mg, w0 + (w1 - w0) * (t0 + t1) / 2, [pts[k], pts[k + 1]]); } };
+    E2(450, 714, 82, 30, -0.12); E2(515, 708, 42, 38, -0.1); E2(395, 720, 34, 30, -0.1);
+    thick(mg, 40, [[515, 698], [560, 688]]);
+    E2(574, 686, 32, 27, 0);
+    mg.save(); mg.translate(616, 702); mg.rotate(0.38); E2(0, 0, 36, 14); mg.restore();
+    mg.beginPath(); mg.moveTo(564, 666); mg.lineTo(576, 618); mg.lineTo(594, 666); mg.closePath(); mg.fill();
+    mg.beginPath(); mg.moveTo(556, 668); mg.quadraticCurveTo(532, 672, 536, 700); mg.lineTo(552, 690); mg.closePath(); mg.fill();
+    taper([[528, 730], [568, 764], [600, 788]], 20, 13); E2(606, 792, 12, 7, 0.4);
+    taper([[506, 734], [540, 778], [560, 808]], 19, 12); E2(566, 812, 12, 7, 0.4);
+    taper([[392, 728], [342, 738], [300, 732]], 22, 12); E2(292, 731, 12, 7);
+    taper([[398, 740], [350, 762], [312, 772]], 20, 11); E2(304, 773, 12, 7);
+    taper([[366, 704], [330, 690], [292, 680]], 15, 6);
+    mg.restore();
+    // coat hem stretched back into the dog's mouth
+    mg.beginPath(); mg.moveTo(640, 775); mg.quadraticCurveTo(600, 760, 548, 712); mg.lineTo(562, 700); mg.quadraticCurveTo(610, 735, 660, 752); mg.closePath(); mg.fill();
   });
   // phone glow
   glow(g, 798, 540, 40, 'rgba(140,230,255,0.9)', 0.9);
@@ -399,7 +406,7 @@ function shot6(g, t) {
   post.push(() => {
   g.fillStyle = '#fff'; g.fillRect(0, 0, W, 34); g.fillRect(0, H - 34, W, 34); g.fillRect(0, 0, 34, H); g.fillRect(W - 34, 0, 34, H);
   g.lineWidth = 10; g.strokeStyle = '#111'; g.strokeRect(34, 34, W - 68, H - 68);
-  g.save(); g.translate(430, 560); g.rotate(-0.1); g.font = '170px Bangers'; g.textAlign = 'center'; g.lineJoin = 'round';
+  g.save(); g.translate(400, 470); g.rotate(-0.1); g.font = '150px Bangers'; g.textAlign = 'center'; g.lineJoin = 'round';
   g.lineWidth = 26; g.strokeStyle = '#111'; g.strokeText('NHAC!', 8, 8); g.strokeText('NHAC!', 0, 0);
   const tg = g.createLinearGradient(0, -80, 0, 60); tg.addColorStop(0, '#fff36a'); tg.addColorStop(1, '#ff8a1e'); g.fillStyle = tg; g.fillText('NHAC!', 0, 0); g.restore();
   });
