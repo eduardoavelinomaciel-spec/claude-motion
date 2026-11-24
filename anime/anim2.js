@@ -119,9 +119,9 @@ function kid(g, x, y, s, ph, k) {
   g.fillStyle = K.pack; g.fillRect(18, -50, 14, 118); // strap
   g.fillStyle = '#ffffff'; g.beginPath(); g.moveTo(-30, -56); g.lineTo(-4, -30); g.lineTo(20, -56); g.closePath(); g.fill(); g.strokeStyle = '#c4c4d4'; g.lineWidth = 3; g.stroke(); // collar
   for (const yy of [-10, 30, 70]) E(g, -26, yy, 4, 4, 0, '#c4c4d4');
-  if (K.girl) { const sw = Math.sin(ph * 2) * 8; g.fillStyle = K.bottom; g.beginPath(); g.moveTo(-50, 112); g.lineTo(50, 112); g.lineTo(78 + sw, 212); g.lineTo(-82 + sw, 212); g.closePath(); g.fill(); g.fillStyle = 'rgba(0,0,0,0.18)'; for (const xx of [-40, 0, 40]) { g.beginPath(); g.moveTo(xx, 116); g.lineTo(xx * 1.5 + sw, 210); g.lineTo(xx * 1.5 + 12 + sw, 210); g.closePath(); g.fill(); } }
-  else { g.fillStyle = K.bottom; g.beginPath(); g.roundRect(-50, 104, 100, 50, 10); g.fill(); g.fillStyle = '#1a2a5a'; g.fillRect(-50, 104, 100, 10); }
+  if (!K.girl) { g.fillStyle = K.bottom; g.beginPath(); g.roundRect(-50, 104, 100, 50, 10); g.fill(); g.fillStyle = '#1a2a5a'; g.fillRect(-50, 104, 100, 10); }
   leg(ph, false);
+  if (K.girl) { const sw = Math.sin(ph * 2) * 8; g.fillStyle = K.bottom; g.beginPath(); g.moveTo(-48, 92); g.lineTo(48, 92); g.lineTo(78 + sw, 212); g.lineTo(-82 + sw, 212); g.closePath(); g.fill(); g.fillStyle = 'rgba(0,0,0,0.18)'; for (const xx of [-40, 0, 40]) { g.beginPath(); g.moveTo(xx, 100); g.lineTo(xx * 1.5 + sw, 210); g.lineTo(xx * 1.5 + 12 + sw, 210); g.closePath(); g.fill(); } }
   // head with a small lag-bob
   limb(g, -6, -40, -8, -80, 34, 30, K.skinS); g.save(); g.translate(-16, -178 + Math.sin(ph * 2 - 0.6) * 4); g.scale(0.92, 0.92); g.rotate(0.04 * Math.sin(ph * 2));
   if (K.girl) for (const [px, py, o] of [[78, -6, 0], [62, 46, 1]]) { const lag = Math.sin(ph * 2 - 1.2 + o) * 0.35; g.save(); g.translate(px, py - 26); g.rotate(0.5 + lag); E(g, 30, 10, 26, 44, 0.3, K.hair); E(g, 24, 0, 10, 20, 0.3, K.hairL); g.restore(); g.fillStyle = '#ff6a9a'; g.beginPath(); g.arc(px, py - 26, 11, 0, 7); g.fill(); }
