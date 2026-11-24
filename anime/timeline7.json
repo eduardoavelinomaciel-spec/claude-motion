@@ -1,0 +1,21 @@
+{
+  "fps": 24,
+  "duration": 34.5,
+  "shots": [
+    { "id": 1, "start": 0.0, "end": 9.0, "name": "página 2x2: ele sempre chega antes" },
+    { "id": 2, "start": 9.0, "end": 15.0, "name": "por cima do ombro: ALI." },
+    { "id": 3, "start": 15.0, "end": 20.0, "name": "cartão: gesto de apontar" },
+    { "id": 4, "start": 20.0, "end": 25.5, "name": "olhares ligados por fios de luz" },
+    { "id": 5, "start": 25.5, "end": 29.5, "name": "tigela na porta" },
+    { "id": 6, "start": 29.5, "end": 34.5, "name": "cartão: ocitocina" }
+  ],
+  "panels": [0.3, 2.3, 4.3, 6.3],
+  "beats": {
+    "zoom": 8.3,
+    "raise": 9.2, "point": 9.8, "ali": 10.0, "go": 11.0, "land": 12.7,
+    "card1": 15.3,
+    "threads": 21.0, "blink": 23.6,
+    "ripple": 26.4,
+    "card2": 29.8
+  }
+}
