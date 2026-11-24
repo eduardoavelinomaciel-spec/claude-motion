@@ -1,0 +1,16 @@
+{
+  "fps": 24,
+  "duration": 29.5,
+  "shots": [
+    { "id": 1, "start": 0.0, "end": 7.0, "name": "de cima: a chuva engrossa" },
+    { "id": 2, "start": 7.0, "end": 15.0, "name": "de costas na faixa, celular" },
+    { "id": 3, "start": 15.0, "end": 20.0, "name": "zoom: as orelhas do Caramelo" },
+    { "id": 4, "start": 20.0, "end": 29.5, "name": "faróis na esquina" }
+  ],
+  "beats": {
+    "tsss": 1.0,
+    "think": 9.0,
+    "crash": 15.0, "closeIn": 15.7, "ears": 16.6, "bang": 16.9,
+    "beams": 20.6, "vrrm": 22.4, "car": 24.2, "flare": 27.4, "black": 28.8
+  }
+}
