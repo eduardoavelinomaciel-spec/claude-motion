@@ -3,7 +3,7 @@ import { makeStreet } from './bg.js';
 await document.fonts.load('8px PS2P'); await document.fonts.load('60px PS2P'); await document.fonts.load('40px Bangers');
 const W = 480, H = 270, S = 4;
 const MODE = new URLSearchParams(location.search).get('f') || 'A';
-const NIGHT = MODE !== 'B';
+const NIGHT = !['B', 'S'].includes(MODE);
 let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647); const R = (a, b) => a + (b - a) * rnd();
 const ctx = document.getElementById('ov').getContext('2d');
 const px = document.getElementById('px').getContext('2d'); px.imageSmoothingEnabled = false;
@@ -103,9 +103,9 @@ if (MODE === 'A') {
   P([1256, 0, 664, 532], Math.round(st.padX - 80)); P([1256, 548, 664, 532], Math.round(st.padX + 120));
   const ox = 205;
   items.push({ spr: SP.carSide({ lit: true, fx: NFX('#ff3cac', 0) }), at: [32, ROAD + 6], z: 1 });
-  items.push({ spr: SP.otavioSide({ head: 0.35, arm: -0.7, farArm: 0.15, stride: 0.22, fx: NFX('#ffb070', -1) }), at: [ox, ROAD], flip: true, z: 2 });
-  items.push({ spr: SP.dogSide({ pose: 'leap', fx: NFX('#ffb070', -1) }), at: [ox + 34, ROAD - 24], flip: true, z: 3 });
-  portrait(SP.dogPortrait({ fx: NFX('#ff3cac', -1) }), panels[1], true);
+  items.push({ spr: SP.otavioSideA({ head: 0.35, arm: -0.7, farArm: 0.15, stride: 0.22, fx: NFX('#ffb070', -1) }), at: [ox, ROAD], flip: true, z: 2 });
+  items.push({ spr: SP.dogA({ pose: 'leap', fx: NFX('#ffb070', -1) }), at: [ox + 34, ROAD - 24], flip: true, z: 3 });
+  portrait(SP.dogPortraitA({ fx: NFX('#ff3cac', -1) }), panels[1], true);
   portrait(SP.handPhone({ fx: NFX('#3cf2ff', 1) }), panels[2], true);
   extras.push((g) => beam(g, 96, ROAD - 18, 1, 220));
   ov.dogHead = () => [(ox + 34 - 22) * S, (ROAD - 24 - 34) * S];
@@ -115,12 +115,12 @@ if (MODE === 'A') {
 if (MODE === 'B') {
   P([0, 0, 1920, 1080], Math.round(st.padX - 250));
   const ox = 120, dg = [250, 258];
-  items.push({ spr: SP.otavioFront({ smile: true }), at: [ox, GY + 8], z: 5 });
+  items.push({ spr: SP.otavioFrontA({ smile: true }), at: [ox, GY + 8], z: 5 });
   items.push({ spr: SP.lowWall(70), at: [400, GY + 8], z: 5 });
   items.push({ spr: SP.cat(), at: [395, GY - 13], flip: true, z: 4 });
   items.push({ spr: SP.trashCan(), at: [335, GY + 12], z: 4 });
   items.push({ spr: SP.lid(), at: [318, GY - 12], z: 4 });
-  items.push({ spr: SP.dogSide({ pose: 'splash', muddy: true }), at: dg, z: 1 });
+  items.push({ spr: SP.dogA({ pose: 'splash', muddy: true }), at: dg, z: 1 });
   for (let k = 0; k < 7; k++) items.push({ spr: SP.pigeon(k % 2 === 0), at: [Math.round(R(170, 300)), Math.round(R(30, 95))], flip: k % 3 === 0, z: 6 });
   extras.unshift((g) => { g.fillStyle = SP.OUT; g.beginPath(); g.ellipse(dg[0], dg[1] + 2, 46, 8, 0, 0, 7); g.fill(); g.fillStyle = '#7a5a3c'; g.beginPath(); g.ellipse(dg[0], dg[1] + 2, 45, 7, 0, 0, 7); g.fill(); g.fillStyle = '#9a7a58'; g.fillRect(dg[0] - 22, dg[1], 16, 1); });
   extras.push((g) => blobs(g, dg[0], dg[1] - 6, 44, 30, ['#6b4a2b', '#8a6a48'], 0.9));
@@ -136,9 +136,9 @@ if (MODE === 'C') {
   P([0, 0, 1920, 1080], Math.round(st.padX - 230)); P([1330, 60, 540, 420], Math.round(st.padX - 40));
   const ox = 150;
   items.push({ spr: SP.carSide({ lit: true, fx: NFX('#3cf2ff', 1) }), at: [318, ROAD + 8], flip: true, z: 1 });
-  items.push({ spr: SP.otavioSide({ lean: -0.38, arm: -2.5, farArm: -1.6, head: -0.3, stride: 0.35, phone: false, shock: true, fx: NFX('#ffb070', 1) }), at: [ox, ROAD], z: 2 });
-  items.push({ spr: SP.dogSide({ pose: 'pull', fx: NFX('#ff3cac', -1) }), at: [ox - 46, ROAD + 2], z: 3 });
-  portrait(SP.dogPortrait({ bite: true, fx: NFX('#ff3cac', -1) }), panels[1]);
+  items.push({ spr: SP.otavioSideA({ lean: -0.3, arm: -2.5, farArm: -1.6, head: -0.08, stride: 0.35, phone: false, shock: true, fx: NFX('#ffb070', 1) }), at: [ox, ROAD], z: 2 });
+  items.push({ spr: SP.dogA({ pose: 'pull', fx: NFX('#ff3cac', -1) }), at: [ox - 60, ROAD + 2], z: 3 });
+  portrait(SP.dogPortraitA({ bite: true, fx: NFX('#ff3cac', -1) }), panels[1]);
   extras.push((g) => beam(g, 252, ROAD - 14, -1, 150));
   extras.push((g) => blobs(g, 318, ROAD + 6, 46, 40, ['#cfe0ff', '#ffffff', '#8fb0ff'], 0.8));
   extras.push((g) => { for (let k = 0; k < 9; k++) { g.fillStyle = 'rgba(255,255,255,0.7)'; g.fillRect(390 + R(0, 40), ROAD - 34 + k * 4, R(20, 50), 1); } });
@@ -160,13 +160,21 @@ function blobs(g, cx, cy, spread, n, cols, up) {
   }
 }
 
+if (MODE === 'S') {
+  P([0, 0, 1920, 1080], 0);
+  const L = [[SP.otavioFrontA({}), 30, 116], [SP.otavioFrontA({ smile: true }), 90, 116], [SP.otavioSideA({ head: 0.35, arm: -0.7, stride: 0.22 }), 160, 116], [SP.otavioSideA({ lean: -0.3, arm: -2.5, farArm: -1.6, head: -0.08, stride: 0.35, phone: false, shock: true }), 235, 116],
+    [SP.dogA({}), 40, 250], [SP.dogA({ pose: 'leap' }), 110, 250], [SP.dogA({ pose: 'pull' }), 180, 250], [SP.dogA({ pose: 'splash', muddy: true }), 250, 250]];
+  L.forEach(([spr, x, y]) => items.push({ spr, at: [x, y], z: 0, s2: true }));
+  items.push({ spr: SP.dogPortraitA({}), at: [380, 116], z: 0 }); items.push({ spr: SP.dogPortraitA({ bite: true }), at: [380, 250], z: 0 });
+}
 // --- compose pixel layer
-for (const p of panels) { const [x, y, w, h] = rp(p); px.drawImage(st.canvas, p.sx, 0, w, h, x, y, w, h); }
+if (MODE === 'S') { px.fillStyle = '#3b5c96'; px.fillRect(0, 0, W, H); } else for (const p of panels) { const [x, y, w, h] = rp(p); px.drawImage(st.canvas, p.sx, 0, w, h, x, y, w, h); }
 if (MODE === 'B') extras.shift()(px);
 items.sort((a, b) => a.z - b.z);
 for (const it of items) {
   px.save(); if (it.clip) { px.beginPath(); px.rect(...it.clip); px.clip(); }
   let [ax, ay] = it.spr.anchor; if (it.center) ax = it.spr.width / 2;
+  if (MODE === 'S' && it.s2) { px.translate(it.at[0], it.at[1]); px.scale(it.flip ? -1 : 1, 1); px.drawImage(it.spr, -ax, -ay); px.restore(); continue; }
   if (it.flip) { px.translate(it.at[0], 0); px.scale(-1, 1); px.drawImage(it.spr, -ax, it.at[1] - ay); } else px.drawImage(it.spr, it.at[0] - ax, it.at[1] - ay);
   px.restore();
 }
@@ -214,5 +222,5 @@ function overlay() {
 }
 
 
-overlay();
+if (MODE !== 'S') overlay();
 window.__done = true;
