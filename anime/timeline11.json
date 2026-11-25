@@ -1,0 +1,16 @@
+{
+  "fps": 24,
+  "duration": 30,
+  "shots": [
+    { "id": 1, "start": 0.0, "end": 8.0, "name": "consultório: a balança" },
+    { "id": 2, "start": 8.0, "end": 15.0, "name": "banho de bolhas" },
+    { "id": 3, "start": 15.0, "end": 22.0, "name": "a ficha e o carimbo" },
+    { "id": 4, "start": 22.0, "end": 30.0, "name": "pelo brilhando" }
+  ],
+  "beats": {
+    "kg": 1.4, "vet": 2.6,
+    "scrub": 8.8, "pop": 11.0,
+    "sign": 15.8, "tum": 19.0,
+    "sparkle": 23.0, "star": 24.2
+  }
+}

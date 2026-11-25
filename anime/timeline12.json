@@ -1,0 +1,16 @@
+{
+  "fps": 24,
+  "duration": 32,
+  "shots": [
+    { "id": 1, "start": 0.0, "end": 7.0, "name": "porta de casa: a coleira" },
+    { "id": 2, "start": 7.0, "end": 11.0, "name": "close na plaquinha" },
+    { "id": 3, "start": 11.0, "end": 16.0, "name": "o rabo não para" },
+    { "id": 4, "start": 16.0, "end": 25.0, "name": "saem juntos, a rua vira diorama" },
+    { "id": 5, "start": 25.0, "end": 32.0, "name": "cartela final" }
+  ],
+  "beats": {
+    "nome": 1.6, "click": 8.6, "tag": 9.0,
+    "soube": 12.0, "cap": 18.0,
+    "q": 25.6, "title": 27.4
+  }
+}
