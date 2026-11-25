@@ -1,0 +1,10 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+@font-face { font-family: 'Bangers'; src: url('node_modules/@fontsource/bangers/files/bangers-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'PS2P'; src: url('node_modules/@fontsource/press-start-2p/files/press-start-2p-latin-400-normal.woff2') format('woff2'); }
+html,body{margin:0;background:#000;overflow:hidden} canvas{display:block}
+</style></head><body><canvas id="c" width="1920" height="1080"></canvas>
+<script type="module">
+// Wrap pixelate before the scene script destructures window.SH, so window.RAW can show the "before" frame.
+Object.defineProperty(window, 'SH', { configurable: true, get() { return this._SH; }, set(v) { const px = v.pixelate; v.pixelate = (...a) => (window.RAW ? undefined : px(...a)); this._SH = v; } });
+await import('./' + new URLSearchParams(location.search).get('page'));
+</script></body></html>

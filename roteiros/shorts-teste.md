@@ -50,3 +50,46 @@ Olhe também:
 | Parte 1 | Começar no olho do Caramelo com o reflexo dos faróis | Começar no "NHAC!" congelado e voltar |
 | Parte 2 | Começar no "BOM DIA, CARAMELO!" | Começar no cartão de RPG ("50× MAIS FARO") |
 | Parte 3 | Começar no "!!" do Caramelo vendo o Otávio | Começar no close da cabeça inclinada |
+
+---
+
+## Correção: a cachorra é fêmea
+
+Na outra conversa, o cachorro virou **Castanha** (fêmea). Na rua a chamam de "Caramelo" e o nome Castanha vem na adoção. O gancho do Short 2 foi refeito: **"TODA MANHÃ ELA ESPERA ALGUÉM QUE NÃO VEM."** Use "a Caramelo", "ela", nos textos.
+
+---
+
+## Shorts extras (para os dias sem parte nova)
+
+Gerar: `node extras.mjs bastidor1` / `node extras.mjs faro` (em `anime/`, com o servidor 8124 ligado). Cortes em `extras.json`; o som vem da cena, nos mesmos cortes.
+
+### Bastidor 1 · "Animei esta chuva só com código" (~19 s)
+- **Título:** `Animei esta chuva só com código (sem IA) 🌧️`
+- **Descrição:**
+```
+Nada de IA: cada gota de chuva, cada luz neon e cada pixel desta cena foram escritos em código.
+
+Primeiro o desenho é feito em 1920×1080, depois um filtro reduz tudo para 480×270 com 12 níveis de cor. Esse é o "antes e depois" que você viu.
+
+A história completa da Castanha está no canal. 🐶
+
+#HistoriasQueAquecem #pixelart #animacao #programacao #creativecoding #shorts
+```
+- **Comentário fixado:** `Quer ver como o olho da Castanha foi desenhado? Esse é o próximo bastidor. 👁️`
+- **Capa:** o quadro do antes e depois no olho.
+- **Vídeo relacionado:** o Short 1 (ou a história completa, quando sair).
+
+### Você sabia? · O faro dela (~15 s)
+- **Título:** `O nariz de um cachorro sente 50 vezes mais que o seu 🐶👃`
+- **Descrição:**
+```
+Um cachorro tem cerca de 300 milhões de receptores de cheiro. Um humano, só 6 milhões.
+É por isso que a Castanha sente o pão da padaria do outro lado da rua. 🥖
+
+Trecho de "O Homem e o Cachorro da Rua", uma história sem palavras.
+
+#HistoriasQueAquecem #cachorro #curiosidades #animacao #pixelart #shorts
+```
+- **Comentário fixado:** `Qual é a coisa mais longe que o seu cachorro já farejou? 👇`
+- **Capa:** o cartão de RPG ("50× MAIS FARO!").
+- **Vídeo relacionado:** o Short 2.

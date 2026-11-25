@@ -1,0 +1,19 @@
+{
+  "note": "Extra Shorts cut from finished scenes. Each segment plays src [from, to] of the scene timeline; mode pix | raw | wipe (raw left, pixel right) | code (raw + typed code). frame = [cx, z] as in shorts.json.",
+  "shorts": [
+    { "id": "bastidor1", "page": "anim.js", "wav": "out/cena1.wav", "badge": "BASTIDOR",
+      "segments": [
+        { "src": [0.3, 4.3], "mode": "pix", "frame": [540, 1], "hook": ["ANIMEI ESTA CHUVA", "SÓ COM CÓDIGO."] },
+        { "src": [7.5, 11.5], "mode": "code", "frame": [1380, 1], "hook": ["NADA DE IA.", "SÓ CÓDIGO."] },
+        { "src": [11.5, 15.0], "mode": "wipe", "frame": [900, 1], "hook": ["ANTES E DEPOIS", "DO FILTRO DE PIXEL"] },
+        { "src": [15.0, 18.5], "mode": "wipe", "frame": [860, 1], "hook": ["ANTES E DEPOIS", "DO FILTRO DE PIXEL"] },
+        { "src": [18.5, 22.5], "mode": "pix", "frame": [700, 1], "hook": ["A HISTÓRIA COMPLETA", "ESTÁ NO CANAL"] }
+      ] },
+    { "id": "faro", "page": "anim2.js", "wav": "out/cena2.wav", "badge": "VOCÊ SABIA?",
+      "segments": [
+        { "src": [6.0, 10.0], "mode": "pix", "frame": [1100, 1], "hook": ["O NARIZ DELA SENTE", "O QUE VOCÊ NÃO SENTE"] },
+        { "src": [10.5, 15.5], "mode": "pix", "frame": [1150, 1], "hook": ["O NARIZ DELA SENTE", "O QUE VOCÊ NÃO SENTE"] },
+        { "src": [28.0, 34.0], "mode": "pix", "frame": [960, 0.8], "hook": ["50 VEZES MAIS FARO", "QUE UM HUMANO!"] }
+      ] }
+  ]
+}

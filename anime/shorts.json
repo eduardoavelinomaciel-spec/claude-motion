@@ -3,7 +3,7 @@
   "shorts": [
     { "id": "s1", "page": "anim.html", "timeline": "timeline.json", "part": "PARTE 1", "hook": ["ELE NÃO VIU O CARRO.", "O CACHORRO VIU."],
       "frame": { "1": [540, 1], "2": [1000, 1], "3": [1380, 1], "4": [900, 1], "5": [860, 1], "6": [700, 1], "7": [960, 1], "8": [760, 0.8] } },
-    { "id": "s2", "page": "anim2.html", "timeline": "timeline2.json", "part": "PARTE 2", "hook": ["TODA MANHÃ ELE ESPERA", "ALGUÉM QUE NÃO VEM."],
+    { "id": "s2", "page": "anim2.html", "timeline": "timeline2.json", "part": "PARTE 2", "hook": ["TODA MANHÃ ELA ESPERA", "ALGUÉM QUE NÃO VEM."],
       "frame": { "1": [1150, 1], "2": [1100, 1], "3": [1150, 1], "4": [600, 1], "5": [900, 1], "6": [960, 0.8] } },
     { "id": "s3", "page": "anim3.html", "timeline": "timeline3.json", "part": "PARTE 3", "hook": ["ELE PASSAVA TODO DIA", "SEM OLHAR PARA O LADO."],
       "frame": { "1": [540, 1], "2": [960, 0.5625], "3": [900, 1], "4": [700, 0.8], "5": [1000, 1], "6": [900, 1] } }
