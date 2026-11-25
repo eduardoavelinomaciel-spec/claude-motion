@@ -14,7 +14,7 @@ await p.evaluate(({ S, TL }) => {
   document.body.appendChild(V); const g = V.getContext('2d'), src = document.getElementById('c');
   const INK = '#111018', PY = 420, PH = 1080; // panel: y 420..1500
   function lettering(text, x, y, size) {
-    g.save(); g.font = `${size}px Bangers`; g.textAlign = 'center'; g.lineJoin = 'round';
+    g.save(); g.font = `${size}px Bangers`; const fit = g.measureText(text).width; if (fit > 980) { size = Math.floor(size * 980 / fit); g.font = `${size}px Bangers`; } g.textAlign = 'center'; g.lineJoin = 'round';
     g.fillStyle = '#d8343c'; g.fillText(text, x + size * 0.05, y + size * 0.06);
     g.lineWidth = size * 0.16; g.strokeStyle = INK; g.strokeText(text, x, y);
     const gr = g.createLinearGradient(0, y - size * 0.75, 0, y); gr.addColorStop(0, '#fff35a'); gr.addColorStop(1, '#ff8a1e'); g.fillStyle = gr; g.fillText(text, x, y); g.restore();
