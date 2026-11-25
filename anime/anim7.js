@@ -391,7 +391,7 @@ function shot5(t, lt) {
   E(ctx, bx, by - 30, 220, 44, 0, '#5a9af0'); E(ctx, bx, by - 26, 192, 34, 0, '#9ad4ff');
   const rk = t - B.ripple; if (rk > 0) for (let i = 0; i < 3; i++) { const k = ((rk * 0.6 + i / 3) % 1); ctx.strokeStyle = `rgba(255,255,255,${0.7 * (1 - k)})`; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(bx + 20, by - 24, 30 + k * 150, (30 + k * 150) * 0.18, 0, 0, 7); ctx.stroke(); }
   E(ctx, bx - 80, by - 34, 60, 6, 0, 'rgba(255,255,255,0.8)');
-  ctx.save(); ctx.translate(bx, by + 16); ctx.font = 'italic 52px Bangers'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#ffffff'; ctx.rotate(-0.03); ctx.fillText('CARAMELO', 0, 0); ctx.restore();
+  ctx.save(); ctx.translate(bx, by + 16); E(ctx, 0, 6, 26, 20, 0, '#ffffff'); for (const [dx, dy] of [[-28, -20], [-10, -32], [10, -32], [28, -20]]) E(ctx, dx, dy, 9, 10, 0, '#ffffff'); ctx.restore();
   ctx.restore();
   bloom(ctx, 0.25, 24); grade(ctx, { vig: 0.45, seed: 75 });
 }

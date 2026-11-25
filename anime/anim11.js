@@ -39,7 +39,6 @@ function dogSit(blink = 0) {
   g.strokeStyle = 'rgba(200,190,180,0.8)'; g.lineWidth = 2; for (let k = 0; k < 10; k++) { const y = Y - 340 + k * 18; g.beginPath(); g.moveTo(X + 80 + (k % 2) * 10, y); g.lineTo(X + 72 + (k % 2) * 10, y + 14); g.stroke(); }
   // head
   const HX = X + 80, HY = Y - 440;
-  g.fillStyle = '#a8601f'; g.beginPath(); g.moveTo(HX - 70, HY - 40); g.quadraticCurveTo(HX - 130, HY - 10, HX - 110, HY + 60); g.quadraticCurveTo(HX - 80, HY + 20, HX - 40, HY - 10); g.closePath(); g.fill(); // folded ear
   const hg = g.createRadialGradient(HX - 20, HY - 40, 10, HX, HY, 120); hg.addColorStop(0, '#f6c07a'); hg.addColorStop(1, '#c47a30'); E(g, HX, HY, 100, 88, 0, hg);
   g.fillStyle = '#cf8436'; g.beginPath(); g.moveTo(HX - 10, HY - 70); g.lineTo(HX + 18, HY - 170); g.lineTo(HX + 55, HY - 62); g.closePath(); g.fill(); // ear up
   g.fillStyle = '#f2a0a8'; g.beginPath(); g.moveTo(HX + 6, HY - 74); g.lineTo(HX + 20, HY - 140); g.lineTo(HX + 42, HY - 70); g.closePath(); g.fill();
@@ -54,6 +53,10 @@ function dogSit(blink = 0) {
   E(g, EX + 20, EY + 34, 18, 7, 0, 'rgba(255,120,140,0.4)');
   // head fur strokes
   { const hr = rng(903); g.save(); g.beginPath(); g.ellipse(HX, HY, 100, 88, 0, 0, 7); g.clip(); for (let k = 0; k < 700; k++) { const x = HX - 100 + hr() * 200, y = HY - 90 + hr() * 180; if (Math.hypot(x - EX, y - EY) < 34) continue; g.strokeStyle = ['#cf8436', '#eaa555', '#ffd08a'][Math.floor(hr() * 3)]; g.globalAlpha = 0.5; g.lineWidth = 1.5; g.beginPath(); g.moveTo(x, y); g.lineTo(x - 10, y + 4); g.stroke(); } g.restore(); g.globalAlpha = 1; }
+  // folded ear, in front of the head so both ears read (one up, one flopped over)
+  { const fe = new Path2D(); fe.moveTo(HX - 92, HY - 40); fe.quadraticCurveTo(HX - 86, HY - 150, HX - 26, HY - 120); fe.quadraticCurveTo(HX - 66, HY - 84, HX - 140, HY + 26); fe.quadraticCurveTo(HX - 126, HY - 20, HX - 92, HY - 40); fe.closePath();
+    const eg = g.createLinearGradient(HX - 110, HY - 110, HX - 40, HY); eg.addColorStop(0, '#b0662a'); eg.addColorStop(1, '#7a400f'); g.fillStyle = eg; g.fill(fe);
+    g.strokeStyle = '#6a3410'; g.lineWidth = 3; g.stroke(fe); g.strokeStyle = 'rgba(255,208,138,0.7)'; g.lineWidth = 3; g.beginPath(); g.moveTo(HX - 80, HY - 128); g.quadraticCurveTo(HX - 56, HY - 126, HX - 36, HY - 118); g.stroke(); }
   // rim light (sun from the left)
   g.save(); g.globalCompositeOperation = 'source-atop'; const rl = g.createLinearGradient(X - 260, 0, X - 120, 0); rl.addColorStop(0, 'rgba(255,240,190,0.55)'); rl.addColorStop(1, 'rgba(255,240,190,0)'); g.fillStyle = rl; g.fillRect(0, 0, 700, 760); g.restore();
   c.anchor = [X, Y]; c.tail = [X - 220, Y - 170];
@@ -305,7 +308,7 @@ const FORM = layer((g) => {
   g.save(); g.translate(960, 560); g.rotate(-0.04); g.fillStyle = 'rgba(40,20,10,0.3)'; g.fillRect(-470, -470, 960, 960); g.fillStyle = '#fbf8f0'; g.fillRect(-480, -480, 960, 960);
   g.fillStyle = '#3a8a6a'; g.fillRect(-480, -480, 960, 90); g.font = '64px Bangers'; g.fillStyle = '#ffffff'; g.textAlign = 'center'; g.fillText('FICHA DE ADOÇÃO', 0, -412);
   g.fillStyle = '#e8e2d4'; g.fillRect(-420, -350, 280, 300); g.save(); g.beginPath(); g.rect(-420, -350, 280, 300); g.clip(); g.drawImage(DOG, 0, 0, 700, 760, -560, -470, 560, 608); g.restore(); g.strokeStyle = '#3a3a3a'; g.lineWidth = 6; g.strokeRect(-420, -350, 280, 300);
-  g.font = '44px Bangers'; g.textAlign = 'left'; g.fillStyle = '#3a3a3a'; const rows = [['ESPÉCIE:', 'CÃO (SRD)'], ['IDADE:', '~4 ANOS'], ['PELAGEM:', 'CARAMELO'], ['TUTOR:', 'OTÁVIO']];
+  g.font = '44px Bangers'; g.textAlign = 'left'; g.fillStyle = '#3a3a3a'; const rows = [['ESPÉCIE:', 'CADELA (SRD)'], ['IDADE:', '~4 ANOS'], ['PELAGEM:', 'CARAMELO'], ['TUTOR:', 'OTÁVIO']];
   rows.forEach(([a, b], i) => { const y = -300 + i * 80; g.fillText(a, -100, y); g.fillStyle = '#2a4a8a'; g.fillText(b, 70, y); g.fillStyle = '#3a3a3a'; g.fillRect(60, y + 12, 340, 3); });
   g.fillText('ASSINATURA:', -420, 260); g.fillRect(-150, 272, 520, 3);
   g.restore();

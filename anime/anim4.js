@@ -431,7 +431,7 @@ function render(t) {
   if (s.id === 1) captionAt(ctx, t, B.cap1, 70, 70, 'MEIA HORA.');
   if (s.id === 2 && t >= C.clockIn) captionAt(ctx, t, B.cap2, 70, 70, 'UMA HORA.');
   if (s.id === 4) { const z = 1.0 + 0.12 * ease(u); breadHeart(ctx, (t - B.icon) / 0.3, 760, 250, 860 + (DX - 1150) * 0 , 430); }
-  if (s.id === 5) { const x = otX(t); sfx(ctx, 'OPA!', x - 330, 330, 92, -0.12, (t - B.opa) / 0.2); speech(ctx, (t - B.sai) / 0.3, x + 260, 150, x + 40, 300, ['SAI DAÍ, AMIGO.'], 60); }
+  if (s.id === 5) { const x = otX(t); sfx(ctx, 'OPA!', x - 330, 330, 92, -0.12, (t - B.opa) / 0.2); speech(ctx, (t - B.sai) / 0.3, x + 260, 150, x + 40, 300, ['SAI DAÍ, AMIGA.'], 60); }
   if (s.id === 6) { for (let i = 0; i < 3; i++) { const k = (t - B.hearts - i * 0.25) / 0.3, fl = Math.max(0, t - B.hearts - i * 0.25) * 14; heart(ctx, EYE6[0] - 40 + (i - 1) * 120, 150 - (i === 1 ? 40 : 0) - fl + Math.sin(t * 3 + i) * 6, 13, k); }
     sfx(ctx, 'ABANA', 1700, 600, 46, 0.12, (t - B.abana) / 0.2); sfx(ctx, 'ABANA', 1740, 700, 40, -0.06, (t - B.abana - 0.45) / 0.2); }
 }
